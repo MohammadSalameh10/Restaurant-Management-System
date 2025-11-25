@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
+
 namespace RestaurantOps.PL
 {
     public class Program
@@ -12,6 +15,14 @@ namespace RestaurantOps.PL
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            var connectionString =
+             builder.Configuration.GetConnectionString("DefaultConnection")
+              ?? throw new InvalidOperationException("Connection string"
+                + "'DefaultConnection' not found.");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(connectionString));
 
             var app = builder.Build();
 

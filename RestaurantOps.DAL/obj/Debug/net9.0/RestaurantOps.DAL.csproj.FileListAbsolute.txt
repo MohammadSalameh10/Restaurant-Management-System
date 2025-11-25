@@ -1,0 +1,13 @@
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\bin\Debug\net9.0\RestaurantOps.DAL.deps.json
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\bin\Debug\net9.0\RestaurantOps.DAL.dll
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\bin\Debug\net9.0\RestaurantOps.DAL.pdb
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.csproj.AssemblyReference.cache
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.AssemblyInfoInputs.cache
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.AssemblyInfo.cs
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.csproj.CoreCompileInputs.cache
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.sourcelink.json
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.dll
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\refint\RestaurantOps.DAL.dll
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\RestaurantOps.DAL.pdb
+C:\Users\hamod\Desktop\Projects\API\RestaurantOps\RestaurantOps.DAL\obj\Debug\net9.0\ref\RestaurantOps.DAL.dll
