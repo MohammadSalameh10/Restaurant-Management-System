@@ -13,7 +13,8 @@ namespace RestaurantOps.PL
             services.AddScoped<IMenuItemService, MenuItemService>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
+            services.AddScoped<IInventoryItemRepository, DAL.Repositories.Classes.InventoryItemRepository>();
+            services.AddScoped<IInventoryItemService, InventoryItemService>();
         }
     }
 }

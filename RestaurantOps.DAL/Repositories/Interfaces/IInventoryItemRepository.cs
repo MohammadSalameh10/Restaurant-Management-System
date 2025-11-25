@@ -10,5 +10,6 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
         void Update(InventoryItem item);
         void Delete(InventoryItem item);
         void Save();
+        List<InventoryItem> GetLowStockItems(decimal threshold);
     }
 }
