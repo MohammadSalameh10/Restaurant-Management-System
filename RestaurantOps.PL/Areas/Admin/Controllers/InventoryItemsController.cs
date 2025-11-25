@@ -24,7 +24,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             return Ok(items);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public ActionResult<InventoryItemResponse> GetById(int id)
         {
             var item = _inventoryItemService.GetById(id);

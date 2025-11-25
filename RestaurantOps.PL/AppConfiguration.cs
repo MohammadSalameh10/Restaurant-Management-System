@@ -17,6 +17,12 @@ namespace RestaurantOps.PL
             services.AddScoped<IInventoryItemService, InventoryItemService>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IJobTitleRepository, JobTitleRepository>();
+            services.AddScoped<IJobTitleService, JobTitleService>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IShiftRepository, ShiftRepository>();
+            services.AddScoped<IShiftService, ShiftService>();
         }
     }
 }
