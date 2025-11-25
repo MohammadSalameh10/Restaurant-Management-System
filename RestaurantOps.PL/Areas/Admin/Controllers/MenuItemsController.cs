@@ -26,7 +26,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public ActionResult<MenuItemResponse> GetById(int id)
         {
             var item = _menuItemService.GetById(id);
@@ -50,7 +50,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
       
-        [HttpPut("{id:int}")]
+        [HttpPut("{id}")]
         public ActionResult Update(int id, MenuItemRequest request)
         {
             if (!ModelState.IsValid)
@@ -64,7 +64,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
        
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             var success = _menuItemService.Delete(id);

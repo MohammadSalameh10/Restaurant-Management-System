@@ -99,6 +99,84 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrdersController",
+    "Method": "GetAll",
+    "RelativePath": "api/Admin/Orders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[RestaurantOps.DAL.DTO.Responses.OrderResponse, RestaurantOps.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrdersController",
+    "Method": "CreateOrder",
+    "RelativePath": "api/Admin/Orders",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "RestaurantOps.DAL.DTO.Requests.OrderCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrdersController",
+    "Method": "GetById",
+    "RelativePath": "api/Admin/Orders/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "RestaurantOps.DAL.DTO.Responses.OrderResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrdersController",
+    "Method": "Delete",
+    "RelativePath": "api/Admin/Orders/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "RestaurantOps.PL.Areas.Customer.Controllers.MenuItemsController",
     "Method": "GetAll",
     "RelativePath": "api/Customer/MenuItems",
@@ -135,6 +213,52 @@
     "ReturnTypes": [
       {
         "Type": "RestaurantOps.DAL.DTO.Responses.MenuItemResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Customer.Controllers.OrdersController",
+    "Method": "GetAll",
+    "RelativePath": "api/Customer/Orders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[RestaurantOps.DAL.DTO.Responses.OrderResponse, RestaurantOps.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Customer.Controllers.OrdersController",
+    "Method": "GetById",
+    "RelativePath": "api/Customer/Orders/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "RestaurantOps.DAL.DTO.Responses.OrderResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",

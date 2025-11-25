@@ -10,5 +10,7 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
         void Update(Order order);
         void Delete(Order order);
         void Save();
+        Order GetOrderWithDetails(int id);
+        List<Order> GetAllWithDetails();
     }
 }

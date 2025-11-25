@@ -25,7 +25,7 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         }
 
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public ActionResult<MenuItemResponse> GetById(int id)
         {
             var item = _menuItemService.GetById(id);

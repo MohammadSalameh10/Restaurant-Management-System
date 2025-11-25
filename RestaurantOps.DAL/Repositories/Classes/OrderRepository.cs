@@ -52,5 +52,29 @@ namespace RestaurantOps.DAL.Repositories.Classes
         {
             _context.SaveChanges();
         }
+
+        public Order GetOrderWithDetails(int id)
+        {
+            return _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Employee)
+                .Include(o => o.OrderStatus)
+                .Include(o => o.OrderType)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.MenuItem)
+                .FirstOrDefault(o => o.Id == id);
+        }
+
+        public List<Order> GetAllWithDetails()
+        {
+            return _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Employee)
+                .Include(o => o.OrderStatus)
+                .Include(o => o.OrderType)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.MenuItem)
+                .ToList();
+        }
     }
 }
