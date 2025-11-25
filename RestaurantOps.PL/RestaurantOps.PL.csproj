@@ -21,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\" />
-    <Folder Include="Areas\Customer\" />
-    <Folder Include="Areas\Identity\" />
+    <Folder Include="Areas\Identity\Controllers\" />
     <Folder Include="Utils\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

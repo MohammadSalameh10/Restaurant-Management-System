@@ -1,7 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using RestaurantOps.DAL.Data;
-
+using Scalar;
+using Scalar.AspNetCore;
 namespace RestaurantOps.PL
 {
     public class Program
@@ -24,12 +25,15 @@ namespace RestaurantOps.PL
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
 
+            builder.Services.AddConfig();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference();
             }
 
             app.UseHttpsRedirection();
