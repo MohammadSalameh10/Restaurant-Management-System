@@ -29,6 +29,10 @@ namespace RestaurantOps.PL
             services.AddScoped<IInventoryItemService, InventoryItemService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IOrderStatusRepository, OrderStatusRepository>();
+            services.AddScoped<IOrderStatusService, OrderStatusService>();
+            services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
+            services.AddScoped<IOrderTypeService, OrderTypeService>();
         }
     }
 }
