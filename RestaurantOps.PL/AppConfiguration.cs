@@ -2,6 +2,7 @@
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.Repositories.Classes;
 using RestaurantOps.DAL.Repositories.Interfaces;
+using RestaurantOps.DAL.Utils;
 
 namespace RestaurantOps.PL
 {
@@ -33,6 +34,7 @@ namespace RestaurantOps.PL
             services.AddScoped<IOrderStatusService, OrderStatusService>();
             services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
             services.AddScoped<IOrderTypeService, OrderTypeService>();
+            services.AddScoped<ISeedData, SeedData>();
         }
     }
 }
