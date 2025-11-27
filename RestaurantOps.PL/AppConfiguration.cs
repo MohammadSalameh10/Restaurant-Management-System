@@ -39,6 +39,7 @@ namespace RestaurantOps.PL
             services.AddScoped<ISeedData, SeedData>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmailSender, EmailSetting>();
+            services.AddScoped<IDashboardService, DashboardService>();
         }
     }
 }
