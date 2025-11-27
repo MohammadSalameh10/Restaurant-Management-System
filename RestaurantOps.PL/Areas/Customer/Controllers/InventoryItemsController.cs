@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Responses;
 
@@ -7,6 +8,7 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
     [Area("Customer")]
     [Route("api/[area]/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Customer")]
     public class InventoryItemsController : ControllerBase
     {
         private readonly IInventoryItemService _inventoryItemService;

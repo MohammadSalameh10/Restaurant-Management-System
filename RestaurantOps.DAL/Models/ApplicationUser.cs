@@ -12,6 +12,8 @@ namespace RestaurantOps.DAL.Models
         public string FullName { get; set; }
         public string? city { get; set; }
         public string? street { get; set; }
+        public string? CodeResetPassword { get; set; }
+        public DateTime? PasswordResetCodeExpiry { get; set; }
 
     }
 }

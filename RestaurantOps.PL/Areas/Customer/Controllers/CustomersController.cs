@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Responses;
@@ -8,6 +9,7 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
     [Area("Customer")]
     [Route("api/[area]/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Customer")]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;

@@ -1,8 +1,10 @@
-﻿using RestaurantOps.BLL.Services.Classes;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using RestaurantOps.BLL.Services.Classes;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.Repositories.Classes;
 using RestaurantOps.DAL.Repositories.Interfaces;
 using RestaurantOps.DAL.Utils;
+using RestaurantOps.PL.Utils;
 
 namespace RestaurantOps.PL
 {
@@ -35,6 +37,8 @@ namespace RestaurantOps.PL
             services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
             services.AddScoped<IOrderTypeService, OrderTypeService>();
             services.AddScoped<ISeedData, SeedData>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IEmailSender, EmailSetting>();
         }
     }
 }

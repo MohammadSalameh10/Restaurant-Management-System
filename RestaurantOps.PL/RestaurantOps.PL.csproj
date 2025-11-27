@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>864c7ee3-ecc0-4c57-b957-04eb61901449</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Identity\Controllers\" />
-    <Folder Include="Utils\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

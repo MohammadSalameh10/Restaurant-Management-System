@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
@@ -9,6 +10,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class InventoryOrdersController : ControllerBase
     {
         private readonly IInventoryOrderService _inventoryOrderService;
