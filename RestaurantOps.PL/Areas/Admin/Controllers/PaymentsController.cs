@@ -36,7 +36,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             return Ok(item);
         }
 
-        [HttpGet("by-order/{orderId:int}")]
+        [HttpGet("by-order/{orderId}")]
         public ActionResult<PaymentResponse> GetByOrderId(int orderId)
         {
             var item = _paymentService.GetByOrderId(orderId);

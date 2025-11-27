@@ -108,6 +108,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 {
                     MenuItemId = i.MenuItemId,
                     Quantity = i.Quantity,
+                    Price = i.Price,
                     CreatedAt = DateTime.UtcNow,
                     status = Status.Active
                 }).ToList()

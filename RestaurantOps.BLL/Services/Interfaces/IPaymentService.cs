@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.DTO.Requests;
+﻿using Microsoft.AspNetCore.Http;
+using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 
 namespace RestaurantOps.BLL.Services.Interfaces
@@ -11,5 +12,8 @@ namespace RestaurantOps.BLL.Services.Interfaces
         int Create(PaymentRequest request);
         bool Update(int id, PaymentRequest request);
         bool Delete(int id);
+
+        Task<OrderPaymentResponse> ProcessOrderPaymentAsync(OrderPaymentRequest request, string UserId, HttpRequest httpRequest);
+        Task<bool> HandleVisaPaymentSuccessAsync(int orderId);
     }
 }

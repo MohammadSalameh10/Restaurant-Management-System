@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RestaurantOps.BLL.Services.Classes;
 using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Utils;
 using Scalar;
 using Scalar.AspNetCore;
+using Stripe;
 namespace RestaurantOps.PL
 {
     public class Program
@@ -63,6 +65,9 @@ namespace RestaurantOps.PL
                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtOptions:SecretKey"]!))
               };
           });
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             var app = builder.Build();
 

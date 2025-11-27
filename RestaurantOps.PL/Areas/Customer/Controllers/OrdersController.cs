@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
+using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 
 namespace RestaurantOps.PL.Areas.Customer.Controllers
@@ -12,17 +14,25 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IPaymentService paymentService)
         {
             _orderService = orderService;
+            _paymentService = paymentService;
         }
 
-        [HttpGet]
-        public ActionResult<List<OrderResponse>> GetAll()
+        [HttpPost]
+        public ActionResult CreateOrder([FromBody] OrderCreateRequest request)
         {
-            var orders = _orderService.GetAll();
-            return Ok(orders);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var id = _orderService.CreateOrder(request);
+            if (id == 0)
+                return BadRequest(new { Message = "Invalid request." });
+
+            return Ok(new { OrderId = id });
         }
 
         [HttpGet("{id}")]
@@ -33,6 +43,25 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
                 return NotFound();
 
             return Ok(order);
+        }
+
+        [HttpPost("{id}/pay")]
+        public async Task<ActionResult> PayOrder(int id, [FromBody] string method)
+        {
+            if (string.IsNullOrWhiteSpace(method))
+                method = "Cash";
+
+            var request = new OrderPaymentRequest
+            {
+                OrderId = id,
+                Method = method
+            };
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await _paymentService.ProcessOrderPaymentAsync(request, userId, Request);
+            if (!response.Success)
+                return BadRequest(new { response.Message });
+
+            return Ok(response);
         }
     }
 }
