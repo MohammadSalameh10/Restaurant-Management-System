@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
@@ -18,6 +19,14 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.MenuItems.ToList();
         }
 
+        public List<MenuItem> GetByIdsWithIngredients(List<int> id)
+        {
+            return _context.MenuItems
+                .Include(m => m.Ingredients)
+                .ThenInclude(i => i.InventoryItem)
+                .Where(m => id.Contains(m.Id))
+                .ToList();
+        }
         public MenuItem GetById(int id)
         {
             return _context.MenuItems.FirstOrDefault(m => m.Id == id);

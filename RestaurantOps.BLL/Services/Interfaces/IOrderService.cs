@@ -8,6 +8,7 @@ namespace RestaurantOps.BLL.Services.Interfaces
         List<OrderResponse> GetAll();
         OrderResponse GetById(int id);
         int CreateOrder(OrderCreateRequest request);
+        bool ChangeStatus(int id, int newStatusId);
         bool Delete(int id);
     }
 }

@@ -77,7 +77,7 @@ namespace RestaurantOps.PL
             await objectOfSeedData.IdentityDataSeedingAsync();
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

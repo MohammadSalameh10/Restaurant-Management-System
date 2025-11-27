@@ -50,6 +50,19 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             return Ok(new { OrderId = orderId });
         }
 
+        [HttpPatch("{id}/status")]
+        public ActionResult ChangeStatus(int id, [FromBody] ChangeOrderStatusRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var success = _orderService.ChangeStatus(id, request.OrderStatusId);
+            if (!success)
+                return NotFound();
+
+            return Ok("Order status updated.");
+        }
+
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

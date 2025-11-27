@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{06871551-F206-4A1C-9E92-6ED366DCE42B}|RestaurantOps.PL\\RestaurantOps.PL.csproj|c:\\users\\hamod\\desktop\\projects\\api\\restaurantops\\restaurantops.pl\\areas\\admin\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06871551-F206-4A1C-9E92-6ED366DCE42B}|RestaurantOps.PL\\RestaurantOps.PL.csproj|solutionrelative:restaurantops.pl\\areas\\admin\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16C623F9-275C-460C-939A-A7AA0F58066A}|RestaurantOps.BLL\\RestaurantOps.BLL.csproj|c:\\users\\hamod\\desktop\\projects\\api\\restaurantops\\restaurantops.bll\\services\\classes\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16C623F9-275C-460C-939A-A7AA0F58066A}|RestaurantOps.BLL\\RestaurantOps.BLL.csproj|solutionrelative:restaurantops.bll\\services\\classes\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16C623F9-275C-460C-939A-A7AA0F58066A}|RestaurantOps.BLL\\RestaurantOps.BLL.csproj|c:\\users\\hamod\\desktop\\projects\\api\\restaurantops\\restaurantops.bll\\services\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16C623F9-275C-460C-939A-A7AA0F58066A}|RestaurantOps.BLL\\RestaurantOps.BLL.csproj|solutionrelative:restaurantops.bll\\services\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8ACF4AAF-7381-4C9F-A529-32EAB4741A6F}|RestaurantOps.DAL\\RestaurantOps.DAL.csproj|c:\\users\\hamod\\desktop\\projects\\api\\restaurantops\\restaurantops.dal\\dto\\requests\\changeorderstatusrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8ACF4AAF-7381-4C9F-A529-32EAB4741A6F}|RestaurantOps.DAL\\RestaurantOps.DAL.csproj|solutionrelative:restaurantops.dal\\dto\\requests\\changeorderstatusrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OrdersController.cs",
+              "DocumentMoniker": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.PL\\Areas\\Admin\\Controllers\\OrdersController.cs",
+              "RelativeDocumentMoniker": "RestaurantOps.PL\\Areas\\Admin\\Controllers\\OrdersController.cs",
+              "ToolTip": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.PL\\Areas\\Admin\\Controllers\\OrdersController.cs",
+              "RelativeToolTip": "RestaurantOps.PL\\Areas\\Admin\\Controllers\\OrdersController.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAkwD8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T09:13:24.819Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderService.cs",
+              "DocumentMoniker": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.BLL\\Services\\Classes\\OrderService.cs",
+              "RelativeDocumentMoniker": "RestaurantOps.BLL\\Services\\Classes\\OrderService.cs",
+              "ToolTip": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.BLL\\Services\\Classes\\OrderService.cs",
+              "RelativeToolTip": "RestaurantOps.BLL\\Services\\Classes\\OrderService.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAA3wIQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T09:12:25.71Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IOrderService.cs",
+              "DocumentMoniker": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.BLL\\Services\\Interfaces\\IOrderService.cs",
+              "RelativeDocumentMoniker": "RestaurantOps.BLL\\Services\\Interfaces\\IOrderService.cs",
+              "ToolTip": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.BLL\\Services\\Interfaces\\IOrderService.cs",
+              "RelativeToolTip": "RestaurantOps.BLL\\Services\\Interfaces\\IOrderService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T09:12:04.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ChangeOrderStatusRequest.cs",
+              "DocumentMoniker": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.DAL\\DTO\\Requests\\ChangeOrderStatusRequest.cs",
+              "RelativeDocumentMoniker": "RestaurantOps.DAL\\DTO\\Requests\\ChangeOrderStatusRequest.cs",
+              "ToolTip": "C:\\Users\\hamod\\Desktop\\Projects\\API\\RestaurantOps\\RestaurantOps.DAL\\DTO\\Requests\\ChangeOrderStatusRequest.cs",
+              "RelativeToolTip": "RestaurantOps.DAL\\DTO\\Requests\\ChangeOrderStatusRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T09:11:31.987Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

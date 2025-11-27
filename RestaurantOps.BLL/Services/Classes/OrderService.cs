@@ -9,6 +9,7 @@ namespace RestaurantOps.BLL.Services.Classes
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly IInventoryItemRepository _inventoryItemRepository;
 
@@ -45,9 +46,8 @@ namespace RestaurantOps.BLL.Services.Classes
 
             var menuItemIds = request.Items.Select(i => i.MenuItemId).Distinct().ToList();
 
-            var allMenuItems = _menuItemRepository.GetAll()
-                .Where(m => menuItemIds.Contains(m.Id))
-                .ToList();
+            var allMenuItems = _menuItemRepository.GetByIdsWithIngredients(menuItemIds);
+
 
 
             var requiredInventory = new Dictionary<int, decimal>();
@@ -119,6 +119,18 @@ namespace RestaurantOps.BLL.Services.Classes
             return order.Id;
         }
 
+        public bool ChangeStatus(int id, int newStatusId)
+        {
+            var order = _orderRepository.GetById(id);
+            if (order == null)
+                return false;
+
+            order.OrderStatusId = newStatusId;
+            _orderRepository.Update(order);
+            _orderRepository.Save();
+
+            return true;
+        }
         public bool Delete(int id)
         {
             var order = _orderRepository.GetById(id);
