@@ -11,5 +11,7 @@ namespace RestaurantOps.BLL.Services.Interfaces
         int CreateOrder(OrderCreateRequest request);
         bool ChangeStatus(int id, OrderStatus newStatus);
         bool Delete(int id);
+        List<OrderResponse> GetCustomerOrders(string userId);
+        bool CancelOrderForCustomer(int orderId, string userId);
     }
 }

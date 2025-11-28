@@ -157,6 +157,32 @@ namespace RestaurantOps.BLL.Services.Classes
             };
         }
 
-        
+        public List<OrderResponse> GetCustomerOrders(string userId)
+        {
+            var orders = _orderRepository.GetAllWithDetails()
+                .Where(o => o.Customer != null && o.Customer.UserId == userId)
+                .ToList();
+
+            return orders.Select(MapToResponse).ToList();
+        }
+
+        public bool CancelOrderForCustomer(int orderId, string userId)
+        {
+            var order = _orderRepository.GetOrderWithDetails(orderId);
+            if (order == null)
+                return false;
+
+            if (order.Customer == null || order.Customer.UserId != userId)
+                return false;
+
+            if (order.OrderStatusEnum != OrderStatus.Pending)
+                return false;
+
+            order.OrderStatusEnum = OrderStatus.Canceled;
+            _orderRepository.Update(order);
+            _orderRepository.Save();
+
+            return true;
+        }
     }
 }

@@ -63,5 +63,31 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("my")]
+        public ActionResult<List<OrderResponse>> GetMyOrders()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var orders = _orderService.GetCustomerOrders(userId);
+            return Ok(orders);
+        }
+
+        [HttpPatch("{id}/cancel")]
+        public ActionResult CancelMyOrder(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var success = _orderService.CancelOrderForCustomer(id, userId);
+            if (!success)
+                return BadRequest("Unable to cancel this order.");
+
+            return Ok("Order canceled successfully.");
+        }
+
     }
 }
