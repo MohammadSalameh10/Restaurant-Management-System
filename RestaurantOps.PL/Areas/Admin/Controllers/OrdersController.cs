@@ -27,6 +27,42 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("filter")]
+        public ActionResult<List<OrderResponse>> Filter([FromQuery] int? status, [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] string? customerName)
+        {
+            var orders = _orderService.GetAll();
+
+            var query = orders.AsQueryable();
+
+            if (status.HasValue && Enum.IsDefined(typeof(OrderStatus), status.Value))
+            {
+                var statusName = ((OrderStatus)status.Value).ToString();
+                query = query.Where(o => o.Status == statusName);
+            }
+
+            if (fromDate.HasValue)
+            {
+                var from = fromDate.Value.Date;
+                query = query.Where(o => o.Date.Date >= from);
+            }
+
+            if (toDate.HasValue)
+            {
+                var to = toDate.Value.Date;
+                query = query.Where(o => o.Date.Date <= to);
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerName))
+            {
+                var name = customerName.Trim().ToLower();
+                query = query.Where(o => !string.IsNullOrEmpty(o.Customer) &&
+                                         o.Customer.ToLower().Contains(name));
+            }
+
+            var filtered = query.ToList();
+            return Ok(filtered);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<OrderResponse> GetById(int id)
         {

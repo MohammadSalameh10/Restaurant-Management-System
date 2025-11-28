@@ -50,7 +50,7 @@ namespace RestaurantOps.DAL.Utils
                 var user3 = new ApplicationUser()
                 {
                     Email = "Amr@gmail.com",
-                    FullName = "Amr Baker",
+                    FullName = "Amr Foqha",
                     PhoneNumber = "0592100102",
                     UserName = "Afoqha",
                     EmailConfirmed = true
