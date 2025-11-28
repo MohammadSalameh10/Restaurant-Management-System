@@ -12,7 +12,6 @@ namespace RestaurantOps.BLL.Services.Interfaces
         int Create(PaymentRequest request);
         bool Update(int id, PaymentRequest request);
         bool Delete(int id);
-
         Task<OrderPaymentResponse> ProcessOrderPaymentAsync(OrderPaymentRequest request, string UserId, HttpRequest httpRequest);
         Task<bool> HandleVisaPaymentSuccessAsync(int orderId);
     }
