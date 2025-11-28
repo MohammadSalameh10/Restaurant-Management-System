@@ -62,7 +62,7 @@ namespace RestaurantOps.DAL.Utils
 
                 await _userManager.AddToRoleAsync(user1, "Admin");
                 await _userManager.AddToRoleAsync(user2, "Customer");
-                await _userManager.AddToRoleAsync(user3, "Customer");
+                await _userManager.AddToRoleAsync(user3, "Employee");
 
             }
 
