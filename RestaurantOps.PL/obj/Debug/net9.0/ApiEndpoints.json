@@ -1113,6 +1113,16 @@
     ]
   },
   {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.ReportsController",
+    "Method": "GetSalesReport",
+    "RelativePath": "api/Admin/Reports/sales",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.ShiftsController",
     "Method": "GetAll",
     "RelativePath": "api/Admin/Shifts",
