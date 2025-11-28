@@ -3,6 +3,7 @@
     public class Customer : BaseModel
     {
         public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int LocationId { get; set; }

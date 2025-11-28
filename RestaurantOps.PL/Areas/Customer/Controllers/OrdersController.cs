@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
+using RestaurantOps.DAL.Repositories.Interfaces;
+using CustomerModel = RestaurantOps.DAL.Models.Customer;
 
 namespace RestaurantOps.PL.Areas.Customer.Controllers
 {
@@ -15,11 +17,13 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
+        private readonly ICustomerRepository _customerRepository;
 
-        public OrdersController(IOrderService orderService, IPaymentService paymentService)
+        public OrdersController(IOrderService orderService, IPaymentService paymentService, ICustomerRepository customerRepository)
         {
             _orderService = orderService;
             _paymentService = paymentService;
+            _customerRepository = customerRepository;
         }
 
         [HttpPost]
@@ -28,11 +32,33 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var id = _orderService.CreateOrder(request);
-            if (id == 0)
-                return BadRequest(new { Message = "Invalid request." });
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
-            return Ok(new { OrderId = id });
+            var customer = _customerRepository.GetByUserId(userId);
+
+            if (customer == null)
+            {
+                customer = new CustomerModel
+                {
+                    Name = "Customer",
+                    PhoneNumber = "",
+                    UserId = userId
+                };
+
+                _customerRepository.Add(customer);
+                _customerRepository.Save();
+            }
+
+            request.CustomerId = customer.Id;
+
+            var orderId = _orderService.CreateOrder(request);
+
+            if (orderId == 0)
+                return BadRequest("Insufficient inventory for one or more items.");
+
+            return Ok(new { OrderId = orderId });
         }
 
         [HttpGet("{id}")]

@@ -10,5 +10,7 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
         void Update(Customer customer);
         void Delete(Customer customer);
         void Save();
+        Customer GetByUserId(string userId);
+
     }
 }

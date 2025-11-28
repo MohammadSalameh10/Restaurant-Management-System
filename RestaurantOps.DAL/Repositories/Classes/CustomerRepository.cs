@@ -48,5 +48,11 @@ namespace RestaurantOps.DAL.Repositories.Classes
         {
             _context.SaveChanges();
         }
+
+        public Customer GetByUserId(string userId)
+        {
+            return _context.Customers.FirstOrDefault(c => c.UserId == userId);
+        }
+
     }
 }
