@@ -1,9 +1,10 @@
-﻿using RestaurantOps.DAL.DTO.Responses;
+﻿using RestaurantOps.BLL.Services.Interfaces;
+using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
 namespace RestaurantOps.BLL.Services.Classes
 {
-    public class ReportService
+    public class ReportService : IReportService
     {
         private readonly IOrderRepository _orderRepository;
 
@@ -50,6 +51,43 @@ namespace RestaurantOps.BLL.Services.Classes
                 OrdersByStatus = statusCount,
                 TopSellingItems = topItems
             };
+
+        }
+        public List<EmployeePerformanceResponse> GetEmployeePerformanceReport()
+        {
+            var orders = _orderRepository.GetAllWithDetails();
+
+            var today = DateTime.UtcNow.Date;
+
+            var grouped = orders
+                .Where(o => o.Employee != null)
+                .GroupBy(o => new { o.EmployeeId, o.Employee.Name });
+
+            var list = new List<EmployeePerformanceResponse>();
+
+            foreach (var g in grouped)
+            {
+                var totalOrders = g.Count();
+                var totalRevenue = g.Sum(o => o.OrderItems.Sum(i => i.Quantity * i.Price));
+
+                var todayOrders = g.Where(o => o.Date.Date == today).ToList();
+                var todayOrdersCount = todayOrders.Count;
+                var todayRevenue = todayOrders.Sum(o => o.OrderItems.Sum(i => i.Quantity * i.Price));
+
+                list.Add(new EmployeePerformanceResponse
+                {
+                    EmployeeId = g.Key.EmployeeId,
+                    EmployeeName = g.Key.Name,
+                    TotalOrders = totalOrders,
+                    TotalRevenue = totalRevenue,
+                    TodayOrders = todayOrdersCount,
+                    TodayRevenue = todayRevenue
+                });
+            }
+
+            return list
+                .OrderByDescending(e => e.TotalRevenue)
+                .ToList();
         }
     }
 }

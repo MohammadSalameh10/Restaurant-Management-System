@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
+using RestaurantOps.DAL.DTO.Responses;
 
 namespace RestaurantOps.PL.Areas.Admin.Controllers
 {
@@ -21,6 +22,13 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         public IActionResult GetSalesReport()
         {
             var report = _reportService.GetSalesReport();
+            return Ok(report);
+        }
+
+        [HttpGet("employees-performance")]
+        public ActionResult<List<EmployeePerformanceResponse>> GetEmployeePerformance()
+        {
+            var report = _reportService.GetEmployeePerformanceReport();
             return Ok(report);
         }
     }

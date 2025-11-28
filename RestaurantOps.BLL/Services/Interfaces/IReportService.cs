@@ -5,5 +5,6 @@ namespace RestaurantOps.BLL.Services.Interfaces
     public interface IReportService
     {
         SalesReportResponse GetSalesReport();
+        List<EmployeePerformanceResponse> GetEmployeePerformanceReport();
     }
 }

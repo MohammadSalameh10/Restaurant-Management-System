@@ -40,6 +40,7 @@ namespace RestaurantOps.PL
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IReportService, ReportService>();
         }
     }
 }

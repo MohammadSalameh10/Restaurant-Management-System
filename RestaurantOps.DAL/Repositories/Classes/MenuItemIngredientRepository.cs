@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
+using RestaurantOps.DAL.Repositories.Interfaces;
 
 namespace RestaurantOps.DAL.Repositories.Classes
 {
-    public class MenuItemIngredientRepository
+    public class MenuItemIngredientRepository : IMenuItemIngredientRepository
     {
         private readonly ApplicationDbContext _context;
 

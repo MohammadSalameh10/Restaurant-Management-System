@@ -1213,6 +1213,26 @@
   },
   {
     "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.ReportsController",
+    "Method": "GetEmployeePerformance",
+    "RelativePath": "api/Admin/Reports/employees-performance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[RestaurantOps.DAL.DTO.Responses.EmployeePerformanceResponse, RestaurantOps.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.ReportsController",
     "Method": "GetSalesReport",
     "RelativePath": "api/Admin/Reports/sales",
     "HttpMethod": "GET",
