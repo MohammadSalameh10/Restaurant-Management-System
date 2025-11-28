@@ -18,7 +18,6 @@ namespace RestaurantOps.DAL.Data
         public DbSet<InventoryOrderItem> InventoryOrderItems { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<MenuItemIngredient> MenuItemIngredients { get; set; }
-        public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }

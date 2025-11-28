@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Responses;
+using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
 namespace RestaurantOps.BLL.Services.Classes
@@ -33,8 +34,8 @@ namespace RestaurantOps.BLL.Services.Classes
             var orders = _orderRepository.GetAllWithDetails();
             var payments = _paymentRepository.GetAll();
             var totalOrders = orders.Count;
-            var completedOrders = orders.Count(o => o.OrderStatusId == 3);
-            var pendingOrders = orders.Count(o => o.OrderStatusId != 3);
+            var completedOrders = orders.Count(o => o.OrderStatusEnum == OrderStatus.Completed);
+            var pendingOrders = orders.Count(o => o.OrderStatusEnum == OrderStatus.Pending);
             var totalRevenue = payments.Sum(p => p.Amount);
             var today = DateTime.UtcNow.Date;
             var todayRevenue = payments

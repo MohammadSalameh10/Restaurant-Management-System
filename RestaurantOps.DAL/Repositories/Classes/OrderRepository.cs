@@ -21,12 +21,12 @@ namespace RestaurantOps.DAL.Repositories.Classes
 
         public Order GetById(int id)
         {
-            return _context.Orders.Include(o => o.Customer)
+            return _context.Orders
+                .Include(o => o.Customer)
                 .Include(o => o.Employee)
-                .Include(o => o.OrderStatus)
                 .Include(o => o.OrderType)
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.MenuItem)
+                    .ThenInclude(oi => oi.MenuItem)
                 .FirstOrDefault(o => o.Id == id);
         }
 
@@ -34,7 +34,6 @@ namespace RestaurantOps.DAL.Repositories.Classes
         {
             order.CreatedAt = DateTime.UtcNow;
             order.status = Status.Active;
-
             _context.Orders.Add(order);
         }
 
@@ -58,10 +57,9 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Employee)
-                .Include(o => o.OrderStatus)
                 .Include(o => o.OrderType)
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.MenuItem)
+                    .ThenInclude(oi => oi.MenuItem)
                 .FirstOrDefault(o => o.Id == id);
         }
 
@@ -70,10 +68,9 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Employee)
-                .Include(o => o.OrderStatus)
                 .Include(o => o.OrderType)
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.MenuItem)
+                    .ThenInclude(oi => oi.MenuItem)
                 .ToList();
         }
     }

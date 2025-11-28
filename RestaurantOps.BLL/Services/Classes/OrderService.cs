@@ -9,7 +9,6 @@ namespace RestaurantOps.BLL.Services.Classes
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly IInventoryItemRepository _inventoryItemRepository;
 
@@ -26,7 +25,6 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<OrderResponse> GetAll()
         {
             var orders = _orderRepository.GetAllWithDetails();
-
             return orders.Select(MapToResponse).ToList();
         }
 
@@ -45,10 +43,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 return 0;
 
             var menuItemIds = request.Items.Select(i => i.MenuItemId).Distinct().ToList();
-
             var allMenuItems = _menuItemRepository.GetByIdsWithIngredients(menuItemIds);
-
-
 
             var requiredInventory = new Dictionary<int, decimal>();
 
@@ -86,7 +81,6 @@ namespace RestaurantOps.BLL.Services.Classes
                 }
             }
 
-
             foreach (var inventoryItem in inventoryItems)
             {
                 var needed = requiredInventory[inventoryItem.Id];
@@ -100,7 +94,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 CustomerId = request.CustomerId,
                 EmployeeId = request.EmployeeId,
                 OrderTypeId = request.OrderTypeId,
-                OrderStatusId = 1,
+                OrderStatusEnum = OrderStatus.Pending,
                 Date = DateTime.UtcNow,
                 CreatedAt = DateTime.UtcNow,
                 status = Status.Active,
@@ -120,18 +114,19 @@ namespace RestaurantOps.BLL.Services.Classes
             return order.Id;
         }
 
-        public bool ChangeStatus(int id, int newStatusId)
+        public bool ChangeStatus(int id, OrderStatus newStatus)
         {
             var order = _orderRepository.GetById(id);
             if (order == null)
                 return false;
 
-            order.OrderStatusId = newStatusId;
+            order.OrderStatusEnum = newStatus;
             _orderRepository.Update(order);
             _orderRepository.Save();
 
             return true;
         }
+
         public bool Delete(int id)
         {
             var order = _orderRepository.GetById(id);
@@ -152,7 +147,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 Date = order.Date,
                 Customer = order.Customer?.Name,
                 Employee = order.Employee?.Name,
-                Status = order.OrderStatus?.Name,
+                Status = order.OrderStatusEnum.ToString(),
                 OrderType = order.OrderType?.Name,
                 Items = order.OrderItems?.Select(oi => new OrderItemResponse
                 {
@@ -161,5 +156,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 }).ToList() ?? new List<OrderItemResponse>()
             };
         }
+
+        
     }
 }

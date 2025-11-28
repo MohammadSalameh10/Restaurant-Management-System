@@ -100,14 +100,13 @@ namespace RestaurantOps.BLL.Services.Classes
                 Amount = p.Amount,
                 Method = p.Method,
                 PaidAt = p.PaidAt,
-                OrderStatus = p.Order?.OrderStatus?.Name,
+                OrderStatus = p.Order?.OrderStatusEnum.ToString(),
                 CustomerName = p.Order?.Customer?.Name
             };
         }
 
         public async Task<OrderPaymentResponse> ProcessOrderPaymentAsync(OrderPaymentRequest request, string userId, HttpRequest httpRequest)
         {
-
             if (request == null)
                 return new OrderPaymentResponse
                 {
@@ -124,11 +123,11 @@ namespace RestaurantOps.BLL.Services.Classes
                 };
 
             if (order.CustomerId.ToString() != userId)
-                return new OrderPaymentResponse 
+                return new OrderPaymentResponse
                 {
-                    Success = false, Message = "Not authorized to pay for this order."
+                    Success = false,
+                    Message = "Not authorized to pay for this order."
                 };
-
 
             if (order.OrderItems == null || !order.OrderItems.Any())
                 return new OrderPaymentResponse
@@ -170,7 +169,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 _paymentRepository.Add(cashPayment);
                 _paymentRepository.Save();
 
-                order.OrderStatusId = 3;
+                order.OrderStatusEnum = OrderStatus.Completed;
                 _orderRepository.Update(order);
                 _orderRepository.Save();
 
@@ -211,7 +210,7 @@ namespace RestaurantOps.BLL.Services.Classes
             var service = new SessionService();
             var session = await service.CreateAsync(options);
 
-            order.OrderStatusId = 2;
+            order.OrderStatusEnum = OrderStatus.Preparing;
             _orderRepository.Update(order);
             _orderRepository.Save();
 
@@ -261,7 +260,7 @@ namespace RestaurantOps.BLL.Services.Classes
             _paymentRepository.Add(payment);
             _paymentRepository.Save();
 
-            order.OrderStatusId = 3;
+            order.OrderStatusEnum = OrderStatus.Completed;
             _orderRepository.Update(order);
             _orderRepository.Save();
 

@@ -19,8 +19,6 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .Include(p => p.Order)
-                    .ThenInclude(o => o.OrderStatus)
                 .ToList();
         }
 
@@ -29,8 +27,6 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .Include(p => p.Order)
-                    .ThenInclude(o => o.OrderStatus)
                 .FirstOrDefault(p => p.Id == id);
         }
 
@@ -39,8 +35,6 @@ namespace RestaurantOps.DAL.Repositories.Classes
             return _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .Include(p => p.Order)
-                    .ThenInclude(o => o.OrderStatus)
                 .FirstOrDefault(p => p.OrderId == orderId);
         }
 

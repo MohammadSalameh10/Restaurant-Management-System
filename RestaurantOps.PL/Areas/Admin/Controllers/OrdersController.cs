@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
+using RestaurantOps.DAL.Models;
 
 namespace RestaurantOps.PL.Areas.Admin.Controllers
 {
@@ -56,7 +57,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _orderService.ChangeStatus(id, request.OrderStatusId);
+            if (!Enum.IsDefined(typeof(OrderStatus), request.OrderStatusId))
+                return BadRequest("Invalid order status.");
+
+            var newStatus = (OrderStatus)request.OrderStatusId;
+
+            var success = _orderService.ChangeStatus(id, newStatus);
             if (!success)
                 return NotFound();
 
