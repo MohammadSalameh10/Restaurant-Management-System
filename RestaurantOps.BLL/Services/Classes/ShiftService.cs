@@ -2,6 +2,7 @@
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
+using RestaurantOps.DAL.Repositories.Classes;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
 namespace RestaurantOps.BLL.Services.Classes
@@ -9,10 +10,12 @@ namespace RestaurantOps.BLL.Services.Classes
     public class ShiftService : IShiftService
     {
         private readonly IShiftRepository _shiftRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public ShiftService(IShiftRepository shiftRepository)
+        public ShiftService(IShiftRepository shiftRepository, IEmployeeRepository employeeRepository)
         {
             _shiftRepository = shiftRepository;
+            _employeeRepository = employeeRepository;
         }
 
         public List<ShiftResponse> GetAll()
@@ -81,6 +84,57 @@ namespace RestaurantOps.BLL.Services.Classes
             return shifts.Select(MapToResponse).ToList();
         }
 
+        public bool EmployeeCheckIn(string userId)
+        {
+            var employee = _employeeRepository.GetByUserId(userId);
+            if (employee == null)
+                return false;
+
+            var today = DateTime.UtcNow.Date;
+
+            var shift = _shiftRepository.GetAll()
+                .FirstOrDefault(s =>
+                    s.EmployeeId == employee.Id &&
+                    s.ExpectedCheckIn.Date == today &&
+                    s.CheckIn == null);
+
+            if (shift == null)
+                return false;
+
+            shift.CheckIn = DateTime.UtcNow;
+            shift.HasWorked = true;
+
+            _shiftRepository.Update(shift);
+            _shiftRepository.Save();
+
+            return true;
+        }
+
+        public bool EmployeeCheckOut(string userId)
+        {
+            var employee = _employeeRepository.GetByUserId(userId);
+            if (employee == null)
+                return false;
+
+            var today = DateTime.UtcNow.Date;
+
+            var shift = _shiftRepository.GetAll()
+                .FirstOrDefault(s =>
+                    s.EmployeeId == employee.Id &&
+                    s.ExpectedCheckIn.Date == today &&
+                    s.CheckIn != null &&
+                    s.CheckOut == null);
+
+            if (shift == null)
+                return false;
+
+            shift.CheckOut = DateTime.UtcNow;
+
+            _shiftRepository.Update(shift);
+            _shiftRepository.Save();
+
+            return true;
+        }
         private ShiftResponse MapToResponse(Shift s)
         {
             return new ShiftResponse

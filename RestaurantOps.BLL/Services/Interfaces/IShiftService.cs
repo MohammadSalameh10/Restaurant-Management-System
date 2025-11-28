@@ -11,5 +11,7 @@ namespace RestaurantOps.BLL.Services.Interfaces
         bool Update(int id, ShiftRequest request);
         bool Delete(int id);
         List<ShiftResponse> GetEmployeeShifts(int employeeId, DateTime? from = null, DateTime? to = null);
+        bool EmployeeCheckIn(string userId);
+        bool EmployeeCheckOut(string userId);
     }
 }

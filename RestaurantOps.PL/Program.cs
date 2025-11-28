@@ -8,7 +8,6 @@ using RestaurantOps.BLL.Services.Classes;
 using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Utils;
-using Scalar;
 using Scalar.AspNetCore;
 using Stripe;
 namespace RestaurantOps.PL
