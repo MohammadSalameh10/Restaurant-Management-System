@@ -63,6 +63,33 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             return Ok(filtered);
         }
 
+        [HttpGet("paged")]
+        public ActionResult<PagedResult<OrderResponse>> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            var orders = _orderService.GetAll();
+
+            var totalCount = orders.Count;
+
+            var items = orders
+                .OrderByDescending(o => o.Date)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var result = new PagedResult<OrderResponse>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<OrderResponse> GetById(int id)
         {

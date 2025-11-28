@@ -858,6 +858,37 @@
     ]
   },
   {
+    "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrdersController",
+    "Method": "GetPaged",
+    "RelativePath": "api/Admin/Orders/paged",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "RestaurantOps.DAL.DTO.Responses.PagedResult\u00601[[RestaurantOps.DAL.DTO.Responses.OrderResponse, RestaurantOps.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "RestaurantOps.PL.Areas.Admin.Controllers.OrderTypesController",
     "Method": "GetAll",
     "RelativePath": "api/Admin/OrderTypes",
