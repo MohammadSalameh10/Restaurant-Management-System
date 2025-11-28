@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
+using RestaurantOps.DAL.Repositories.Interfaces;
 
 namespace RestaurantOps.PL.Areas.Staff.Controllers
 {
@@ -15,10 +17,12 @@ namespace RestaurantOps.PL.Areas.Staff.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IEmployeeRepository employeeRepository)
         {
             _orderService = orderService;
+            _employeeRepository = employeeRepository;
         }
 
         [HttpGet("today")]
@@ -30,6 +34,28 @@ namespace RestaurantOps.PL.Areas.Staff.Controllers
                 .Where(o => o.Date.Date == today)
                 .ToList();
 
+            return Ok(orders);
+        }
+
+        [HttpGet]
+        public ActionResult<List<OrderResponse>> GetAll()
+        {
+            var orders = _orderService.GetAll();
+            return Ok(orders);
+        }
+
+        [HttpGet("my")]
+        public ActionResult<List<OrderResponse>> GetMyOrders()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var employee = _employeeRepository.GetByUserId(userId);
+            if (employee == null)
+                return BadRequest("Employee profile not found for this user.");
+
+            var orders = _orderService.GetOrdersForEmployee(employee.Id);
             return Ok(orders);
         }
 

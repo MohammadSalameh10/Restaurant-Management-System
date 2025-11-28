@@ -13,5 +13,7 @@ namespace RestaurantOps.BLL.Services.Interfaces
         bool Delete(int id);
         List<OrderResponse> GetCustomerOrders(string userId);
         bool CancelOrderForCustomer(int orderId, string userId);
+        List<OrderResponse> GetOrdersForEmployee(int employeeId);
+
     }
 }

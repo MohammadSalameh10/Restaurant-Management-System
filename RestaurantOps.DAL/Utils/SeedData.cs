@@ -27,6 +27,7 @@ namespace RestaurantOps.DAL.Utils
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
                 await _roleManager.CreateAsync(new IdentityRole("Customer"));
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
             }
 
             if (!await _userManager.Users.AnyAsync())

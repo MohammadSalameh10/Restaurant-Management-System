@@ -184,5 +184,14 @@ namespace RestaurantOps.BLL.Services.Classes
 
             return true;
         }
+        public List<OrderResponse> GetOrdersForEmployee(int employeeId)
+        {
+            var orders = _orderRepository.GetAllWithDetails()
+                .Where(o => o.EmployeeId == employeeId)
+                .ToList();
+
+            return orders.Select(MapToResponse).ToList();
+        }
+
     }
 }

@@ -12,8 +12,8 @@ using RestaurantOps.DAL.Data;
 namespace RestaurantOps.DAL.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251128130905_AddUserIdToCustomer")]
-    partial class AddUserIdToCustomer
+    [Migration("20251128172751_add userId to customer and employee")]
+    partial class adduserIdtocustomerandemployee
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,7 +172,7 @@ namespace RestaurantOps.DAL.Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -180,6 +180,8 @@ namespace RestaurantOps.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Customers");
                 });
@@ -202,6 +204,10 @@ namespace RestaurantOps.DAL.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -653,7 +659,15 @@ namespace RestaurantOps.DAL.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RestaurantOps.DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Location");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RestaurantOps.DAL.Models.Employee", b =>
