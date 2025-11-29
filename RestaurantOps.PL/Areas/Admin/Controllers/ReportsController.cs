@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantOps.BLL.Services.Classes;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Responses;
+using QuestPDF.Fluent;
+
 
 namespace RestaurantOps.PL.Areas.Admin.Controllers
 {
@@ -12,10 +15,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly IReportService _reportService;
+        private readonly ReportPdfService _reportPdfService;
 
-        public ReportsController(IReportService reportService)
+        public ReportsController(IReportService reportService, ReportPdfService reportPdfService)
         {
             _reportService = reportService;
+            _reportPdfService = reportPdfService;
         }
 
         [HttpGet("sales")]
@@ -30,6 +35,17 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         {
             var report = _reportService.GetEmployeePerformanceReport();
             return Ok(report);
+        }
+
+        [HttpGet("sales-pdf")]
+        public ActionResult GetSalesReportPdf()
+        {
+            var document = _reportPdfService.CreateSalesReportDocument();
+            var pdfBytes = document.GeneratePdf();
+
+            var fileName = $"SalesReport_{DateTime.UtcNow:yyyyMMdd_HHmm}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
         }
     }
 }
