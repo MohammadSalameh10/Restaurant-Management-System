@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -21,15 +22,13 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<ShiftResponse> GetAll()
         {
             var shifts = _shiftRepository.GetAll();
-            return shifts.Select(MapToResponse).ToList();
+            return shifts.Adapt<List<ShiftResponse>>();
         }
 
         public ShiftResponse GetById(int id)
         {
             var shift = _shiftRepository.GetById(id);
-            if (shift == null) return null;
-
-            return MapToResponse(shift);
+            return shift?.Adapt<ShiftResponse>();
         }
 
         public bool Create(ShiftRequest request)
@@ -81,7 +80,7 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<ShiftResponse> GetEmployeeShifts(int employeeId, DateTime? from = null, DateTime? to = null)
         {
             var shifts = _shiftRepository.GetEmployeeShifts(employeeId, from, to);
-            return shifts.Select(MapToResponse).ToList();
+            return shifts.Adapt<List<ShiftResponse>>();
         }
 
         public bool EmployeeCheckIn(string userId)
@@ -134,20 +133,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _shiftRepository.Save();
 
             return true;
-        }
-        private ShiftResponse MapToResponse(Shift s)
-        {
-            return new ShiftResponse
-            {
-                Id = s.Id,
-                EmployeeId = s.EmployeeId,
-                EmployeeName = s.Employee?.Name,
-                ExpectedCheckIn = s.ExpectedCheckIn,
-                ExpectedCheckOut = s.ExpectedCheckOut,
-                CheckIn = s.CheckIn,
-                CheckOut = s.CheckOut,
-                HasWorked = s.HasWorked
-            };
         }
     }
 }

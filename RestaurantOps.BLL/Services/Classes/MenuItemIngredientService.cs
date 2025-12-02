@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,16 +19,13 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<MenuItemIngredientResponse> GetAll()
         {
             var list = _menuItemIngredientRepository.GetAll();
-            return list.Select(MapToResponse).ToList();
+            return list.Adapt<List<MenuItemIngredientResponse>>();
         }
 
         public MenuItemIngredientResponse GetById(int id)
         {
             var entity = _menuItemIngredientRepository.GetById(id);
-            if (entity == null)
-                return null;
-
-            return MapToResponse(entity);
+            return entity?.Adapt<MenuItemIngredientResponse>();
         }
 
         public bool Create(MenuItemIngredientRequest request)
@@ -35,12 +33,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (request == null)
                 return false;
 
-            var entity = new MenuItemIngredient
-            {
-                Quantity = request.Quantity,
-                MenuItemId = request.MenuItemId,
-                InventoryItemId = request.InventoryItemId
-            };
+            var entity = request.Adapt<MenuItemIngredient>();
 
             _menuItemIngredientRepository.Add(entity);
             _menuItemIngredientRepository.Save();
@@ -53,9 +46,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (entity == null)
                 return false;
 
-            entity.Quantity = request.Quantity;
-            entity.MenuItemId = request.MenuItemId;
-            entity.InventoryItemId = request.InventoryItemId;
+            request.Adapt(entity);
 
             _menuItemIngredientRepository.Update(entity);
             _menuItemIngredientRepository.Save();
@@ -71,19 +62,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _menuItemIngredientRepository.Delete(entity);
             _menuItemIngredientRepository.Save();
             return true;
-        }
-
-        private MenuItemIngredientResponse MapToResponse(MenuItemIngredient m)
-        {
-            return new MenuItemIngredientResponse
-            {
-                Id = m.Id,
-                Quantity = m.Quantity,
-                MenuItemId = m.MenuItemId,
-                MenuItemName = m.MenuItem?.ItemName,
-                InventoryItemId = m.InventoryItemId,
-                InventoryItemName = m.InventoryItem?.Name
-            };
         }
     }
 }

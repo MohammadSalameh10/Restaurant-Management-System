@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -19,7 +20,7 @@ namespace RestaurantOps.BLL.Services.Classes
         {
             var items = _inventoryItemRepository.GetAll();
 
-            return items.Select(MapToResponse).ToList();
+            return items.Adapt<List<InventoryItemResponse>>();
         }
 
         public InventoryItemResponse GetById(int id)
@@ -28,7 +29,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (item == null)
                 return null;
 
-            return MapToResponse(item);
+            return item.Adapt<InventoryItemResponse>();
         }
 
         public bool Create(InventoryItemRequest request)
@@ -78,19 +79,7 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<InventoryItemResponse> GetLowStock(decimal threshold)
         {
             var items = _inventoryItemRepository.GetLowStockItems(threshold);
-            return items.Select(MapToResponse).ToList();
-        }
-
-        private InventoryItemResponse MapToResponse(InventoryItem item)
-        {
-            return new InventoryItemResponse
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Stock = item.Stock,
-                SupplierId = item.SupplierId,
-                SupplierName = item.Supplier?.Name
-            };
+            return items.Adapt<List<InventoryItemResponse>>();
         }
     }
 }

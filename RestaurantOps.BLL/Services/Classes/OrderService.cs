@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -25,16 +26,13 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<OrderResponse> GetAll()
         {
             var orders = _orderRepository.GetAllWithDetails();
-            return orders.Select(MapToResponse).ToList();
+            return orders.Adapt<List<OrderResponse>>();
         }
 
         public OrderResponse GetById(int id)
         {
             var order = _orderRepository.GetOrderWithDetails(id);
-            if (order == null)
-                return null;
-
-            return MapToResponse(order);
+            return order?.Adapt<OrderResponse>();
         }
 
         public int CreateOrder(OrderCreateRequest request)
@@ -139,31 +137,13 @@ namespace RestaurantOps.BLL.Services.Classes
             return true;
         }
 
-        private OrderResponse MapToResponse(Order order)
-        {
-            return new OrderResponse
-            {
-                Id = order.Id,
-                Date = order.Date,
-                Customer = order.Customer?.Name,
-                Employee = order.Employee?.Name,
-                Status = order.OrderStatusEnum.ToString(),
-                OrderType = order.OrderType?.Name,
-                Items = order.OrderItems?.Select(oi => new OrderItemResponse
-                {
-                    MenuItem = oi.MenuItem?.ItemName,
-                    Quantity = oi.Quantity
-                }).ToList() ?? new List<OrderItemResponse>()
-            };
-        }
-
         public List<OrderResponse> GetCustomerOrders(string userId)
         {
             var orders = _orderRepository.GetAllWithDetails()
                 .Where(o => o.Customer != null && o.Customer.UserId == userId)
                 .ToList();
 
-            return orders.Select(MapToResponse).ToList();
+            return orders.Adapt<List<OrderResponse>>();
         }
 
         public bool CancelOrderForCustomer(int orderId, string userId)
@@ -190,8 +170,7 @@ namespace RestaurantOps.BLL.Services.Classes
                 .Where(o => o.EmployeeId == employeeId)
                 .ToList();
 
-            return orders.Select(MapToResponse).ToList();
+            return orders.Adapt<List<OrderResponse>>();
         }
-
     }
 }

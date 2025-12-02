@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,33 +19,20 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<OrderTypeResponse> GetAll()
         {
             var list = _orderTypeRepository.GetAll();
-            return list.Select(t => new OrderTypeResponse
-            {
-                Id = t.Id,
-                Name = t.Name
-            }).ToList();
+            return list.Adapt<List<OrderTypeResponse>>();
         }
 
         public OrderTypeResponse GetById(int id)
         {
-            var t = _orderTypeRepository.GetById(id);
-            if (t == null) return null;
-
-            return new OrderTypeResponse
-            {
-                Id = t.Id,
-                Name = t.Name
-            };
+            var type = _orderTypeRepository.GetById(id);
+            return type?.Adapt<OrderTypeResponse>();
         }
 
         public bool Create(OrderTypeRequest request)
         {
             if (request == null) return false;
 
-            var entity = new OrderType
-            {
-                Name = request.Name
-            };
+            var entity = request.Adapt<OrderType>();
 
             _orderTypeRepository.Add(entity);
             _orderTypeRepository.Save();
@@ -56,7 +44,7 @@ namespace RestaurantOps.BLL.Services.Classes
             var entity = _orderTypeRepository.GetById(id);
             if (entity == null) return false;
 
-            entity.Name = request.Name;
+            request.Adapt(entity);
 
             _orderTypeRepository.Update(entity);
             _orderTypeRepository.Save();

@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,39 +19,22 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<JobTitleResponse> GetAll()
         {
             var list = _jobTitleRepository.GetAll();
-            return list.Select(j => new JobTitleResponse
-            {
-                Id = j.Id,
-                Name = j.Name,
-                Description = j.Description,
-                PayRate = j.PayRate
-            }).ToList();
+            return list.Adapt<List<JobTitleResponse>>();
         }
 
         public JobTitleResponse GetById(int id)
         {
-            var j = _jobTitleRepository.GetById(id);
-            if (j == null) return null;
+            var job = _jobTitleRepository.GetById(id);
+            if (job == null) return null;
 
-            return new JobTitleResponse
-            {
-                Id = j.Id,
-                Name = j.Name,
-                Description = j.Description,
-                PayRate = j.PayRate
-            };
+            return job?.Adapt<JobTitleResponse>();
         }
 
         public bool Create(JobTitleRequest request)
         {
             if (request == null) return false;
 
-            var entity = new JobTitle
-            {
-                Name = request.Name,
-                Description = request.Description,
-                PayRate = request.PayRate
-            };
+            var entity = request.Adapt<JobTitle>();
 
             _jobTitleRepository.Add(entity);
             _jobTitleRepository.Save();
@@ -62,9 +46,7 @@ namespace RestaurantOps.BLL.Services.Classes
             var entity = _jobTitleRepository.GetById(id);
             if (entity == null) return false;
 
-            entity.Name = request.Name;
-            entity.Description = request.Description;
-            entity.PayRate = request.PayRate;
+            request.Adapt(entity);
 
             _jobTitleRepository.Update(entity);
             _jobTitleRepository.Save();

@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,7 +19,7 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<CustomerResponse> GetAll()
         {
             var customers = _customerRepository.GetAll();
-            return customers.Select(MapToResponse).ToList();
+            return customers.Adapt<List<CustomerResponse>>();
         }
 
         public CustomerResponse GetById(int id)
@@ -27,7 +28,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (customer == null)
                 return null;
 
-            return MapToResponse(customer);
+            return customer.Adapt<CustomerResponse>();
         }
 
         public bool Create(CustomerRequest request)
@@ -71,19 +72,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _customerRepository.Delete(customer);
             _customerRepository.Save();
             return true;
-        }
-
-        private CustomerResponse MapToResponse(Customer customer)
-        {
-            return new CustomerResponse
-            {
-                Id = customer.Id,
-                Name = customer.Name,
-                PhoneNumber = customer.PhoneNumber,
-                LocationId = customer.LocationId,
-                LocationCity = customer.Location?.City,
-                LocationStreet = customer.Location?.Street
-            };
         }
     }
 }

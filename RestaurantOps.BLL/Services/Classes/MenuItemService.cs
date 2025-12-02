@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -19,30 +20,13 @@ namespace RestaurantOps.BLL.Services.Classes
         {
             var items = _menuItemRepository.GetAll();
 
-            return items
-                .Select(m => new MenuItemResponse
-                {
-                    Id = m.Id,
-                    ItemName = m.ItemName,
-                    Description = m.Description,
-                    IsAvailable = m.IsAvailable
-                })
-                .ToList();
+            return items.Adapt<List<MenuItemResponse>>();
         }
 
         public MenuItemResponse GetById(int id)
         {
             var item = _menuItemRepository.GetById(id);
-            if (item == null)
-                return null;
-
-            return new MenuItemResponse
-            {
-                Id = item.Id,
-                ItemName = item.ItemName,
-                Description = item.Description,
-                IsAvailable = item.IsAvailable
-            };
+            return item?.Adapt<MenuItemResponse>();
         }
 
         public bool Create(MenuItemRequest request)
@@ -50,12 +34,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (request == null)
                 return false;
 
-            var entity = new MenuItem
-            {
-                ItemName = request.ItemName,
-                Description = request.Description,
-                IsAvailable = request.IsAvailable,
-            };
+            var entity = request.Adapt<MenuItem>();
 
             _menuItemRepository.Add(entity);
             _menuItemRepository.Save();
@@ -68,9 +47,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (item == null)
                 return false;
 
-            item.ItemName = request.ItemName;
-            item.Description = request.Description;
-            item.IsAvailable = request.IsAvailable;
+            request.Adapt(item);
 
             _menuItemRepository.Update(item);
             _menuItemRepository.Save();

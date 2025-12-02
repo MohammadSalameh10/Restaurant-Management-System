@@ -1,4 +1,6 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Azure;
+using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -22,7 +24,13 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<InventoryOrderResponse> GetAll()
         {
             var orders = _inventoryOrderRepository.GetAll();
-            return orders.Select(MapToResponse).ToList();
+            var responses = orders.Adapt<List<InventoryOrderResponse>>();
+            foreach (var response in responses)
+            {
+                response.TotalCost = response.Items?.Sum(i => i.Stock * i.Price) ?? 0;
+            }
+
+            return responses;
         }
 
         public InventoryOrderResponse GetById(int id)
@@ -30,7 +38,10 @@ namespace RestaurantOps.BLL.Services.Classes
             var order = _inventoryOrderRepository.GetById(id);
             if (order == null) return null;
 
-            return MapToResponse(order);
+            var response = order.Adapt<InventoryOrderResponse>();
+            response.TotalCost = response.Items?.Sum(i => i.Stock * i.Price) ?? 0;
+
+            return response;
         }
 
         public int Create(InventoryOrderRequest request)
@@ -87,30 +98,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _inventoryOrderRepository.Delete(order);
             _inventoryOrderRepository.Save();
             return true;
-        }
-
-        private InventoryOrderResponse MapToResponse(InventoryOrder o)
-        {
-            var items = o.Items ?? new List<InventoryOrderItem>();
-
-            var itemsDto = items.Select(i => new InventoryOrderItemResponse
-            {
-                InventoryItemName = i.InventoryItem?.Name,
-                Stock = i.Stock,
-                Price = i.Price
-            }).ToList();
-
-            var totalCost = itemsDto.Sum(i => i.Stock * i.Price);
-
-            return new InventoryOrderResponse
-            {
-                Id = o.Id,
-                Date = o.Date,
-                EmployeeId = o.EmployeeId,
-                EmployeeName = o.Employee?.Name,
-                TotalCost = totalCost,
-                Items = itemsDto
-            };
         }
     }
 }

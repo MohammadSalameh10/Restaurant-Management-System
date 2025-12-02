@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,26 +19,16 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<LocationResponse> GetAll()
         {
             var list = _locationRepository.GetAll();
-            return list.Select(l => new LocationResponse
-            {
-                Id = l.Id,
-                City = l.City,
-                Street = l.Street
-            }).ToList();
+            return list.Adapt<List<LocationResponse>>();
         }
 
         public LocationResponse GetById(int id)
         {
-            var l = _locationRepository.GetById(id);
-            if (l == null)
+            var location = _locationRepository.GetById(id);
+            if (location == null)
                 return null;
 
-            return new LocationResponse
-            {
-                Id = l.Id,
-                City = l.City,
-                Street = l.Street
-            };
+            return location?.Adapt<LocationResponse>();
         }
 
         public int Create(LocationRequest request)
@@ -45,13 +36,10 @@ namespace RestaurantOps.BLL.Services.Classes
             if (request == null)
                 return 0;
 
-            var entity = new Location
-            {
-                City = request.City,
-                Street = request.Street,
-                CreatedAt = DateTime.UtcNow,
-                status = Status.Active
-            };
+            var entity = request.Adapt<Location>();
+
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.status = Status.Active;
 
             _locationRepository.Add(entity);
             _locationRepository.Save();
@@ -65,8 +53,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (entity == null)
                 return false;
 
-            entity.City = request.City;
-            entity.Street = request.Street;
+            request.Adapt(entity);
 
             _locationRepository.Update(entity);
             _locationRepository.Save();

@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -20,16 +21,13 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<SupplierResponse> GetAll()
         {
             var suppliers = _supplierRepository.GetAll();
-            return suppliers.Select(MapToResponse).ToList();
+            return suppliers.Adapt<List<SupplierResponse>>();
         }
 
         public SupplierResponse GetById(int id)
         {
             var supplier = _supplierRepository.GetById(id);
-            if (supplier == null)
-                return null;
-
-            return MapToResponse(supplier);
+            return supplier?.Adapt<SupplierResponse>();
         }
 
         public int Create(SupplierRequest request)
@@ -41,14 +39,9 @@ namespace RestaurantOps.BLL.Services.Classes
             if (location == null)
                 return 0;
 
-            var entity = new Supplier
-            {
-                Name = request.Name,
-                PhoneNum = request.PhoneNumber,
-                LocationId = request.LocationId,
-                CreatedAt = DateTime.UtcNow,
-                status = Status.Active
-            };
+            var entity = request.Adapt<Supplier>();
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.status = Status.Active;
 
             _supplierRepository.Add(entity);
             _supplierRepository.Save();
@@ -66,9 +59,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (location == null)
                 return false;
 
-            supplier.Name = request.Name;
-            supplier.PhoneNum = request.PhoneNumber;
-            supplier.LocationId = request.LocationId;
+            request.Adapt(supplier);
 
             _supplierRepository.Update(supplier);
             _supplierRepository.Save();
@@ -86,19 +77,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _supplierRepository.Save();
 
             return true;
-        }
-
-        private SupplierResponse MapToResponse(Supplier supplier)
-        {
-            return new SupplierResponse
-            {
-                Id = supplier.Id,
-                Name = supplier.Name,
-                PhoneNumber = supplier.PhoneNum,
-                LocationId = supplier.LocationId,
-                LocationCity = supplier.Location?.City,
-                LocationStreet = supplier.Location?.Street
-            };
         }
     }
 }

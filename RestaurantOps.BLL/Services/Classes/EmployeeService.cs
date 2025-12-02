@@ -1,4 +1,5 @@
-﻿using RestaurantOps.BLL.Services.Interfaces;
+﻿using Mapster;
+using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
 using RestaurantOps.DAL.Models;
@@ -18,7 +19,7 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<EmployeeResponse> GetAll()
         {
             var employees = _employeeRepository.GetAll();
-            return employees.Select(MapToResponse).ToList();
+            return employees.Adapt<List<EmployeeResponse>>();
         }
 
         public EmployeeResponse GetById(int id)
@@ -26,7 +27,7 @@ namespace RestaurantOps.BLL.Services.Classes
             var employee = _employeeRepository.GetById(id);
             if (employee == null) return null;
 
-            return MapToResponse(employee);
+            return employee?.Adapt<EmployeeResponse>();
         }
 
         public bool Create(EmployeeRequest request)
@@ -67,19 +68,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _employeeRepository.Delete(employee);
             _employeeRepository.Save();
             return true;
-        }
-
-        private EmployeeResponse MapToResponse(Employee e)
-        {
-            return new EmployeeResponse
-            {
-                Id = e.Id,
-                Name = e.Name,
-                DateOfBirth = e.DateOfBirth,
-                JobTitleId = e.JobTitleId,
-                JobTitleName = e.JobTitle?.Name,
-                JobTitlePayRate = e.JobTitle?.PayRate ?? 0
-            };
         }
     }
 }

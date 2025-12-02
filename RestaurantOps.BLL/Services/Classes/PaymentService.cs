@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
@@ -24,23 +25,19 @@ namespace RestaurantOps.BLL.Services.Classes
         public List<PaymentResponse> GetAll()
         {
             var payments = _paymentRepository.GetAll();
-            return payments.Select(MapToResponse).ToList();
+            return payments.Adapt<List<PaymentResponse>>();
         }
 
         public PaymentResponse GetById(int id)
         {
             var payment = _paymentRepository.GetById(id);
-            if (payment == null) return null;
-
-            return MapToResponse(payment);
+            return payment?.Adapt<PaymentResponse>();
         }
 
         public PaymentResponse GetByOrderId(int orderId)
         {
             var payment = _paymentRepository.GetByOrderId(orderId);
-            if (payment == null) return null;
-
-            return MapToResponse(payment);
+            return payment?.Adapt<PaymentResponse>();
         }
 
         public int Create(PaymentRequest request)
@@ -89,20 +86,6 @@ namespace RestaurantOps.BLL.Services.Classes
             _paymentRepository.Delete(payment);
             _paymentRepository.Save();
             return true;
-        }
-
-        private PaymentResponse MapToResponse(Payment p)
-        {
-            return new PaymentResponse
-            {
-                Id = p.Id,
-                OrderId = p.OrderId,
-                Amount = p.Amount,
-                Method = p.Method,
-                PaidAt = p.PaidAt,
-                OrderStatus = p.Order?.OrderStatusEnum.ToString(),
-                CustomerName = p.Order?.Customer?.Name
-            };
         }
 
         public async Task<OrderPaymentResponse> ProcessOrderPaymentAsync(OrderPaymentRequest request, string userId, HttpRequest httpRequest)
@@ -266,6 +249,5 @@ namespace RestaurantOps.BLL.Services.Classes
 
             return true;
         }
-
     }
 }
