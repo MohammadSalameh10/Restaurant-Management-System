@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
+using RestaurantOps.DAL.DTO.Requests;
+using RestaurantOps.DAL.DTO.Responses;
 
 namespace RestaurantOps.PL.Areas.Customer.Controllers
 {
@@ -15,6 +18,21 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         public PaymentsController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
+        }
+
+        [HttpPost("process")]
+        public async Task<ActionResult<OrderPaymentResponse>> Process([FromBody] OrderPaymentRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+                return Unauthorized();
+
+            var result = await _paymentService.ProcessOrderPaymentAsync(request, userId, Request);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpGet("success/{orderId}")]

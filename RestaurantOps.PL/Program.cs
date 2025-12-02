@@ -78,6 +78,7 @@ namespace RestaurantOps.PL
             }
             var scope = app.Services.CreateScope();
             var objectOfSeedData = scope.ServiceProvider.GetRequiredService<ISeedData>();
+            await objectOfSeedData.DataSeedingAsync();
             await objectOfSeedData.IdentityDataSeedingAsync();
 
             app.UseHttpsRedirection();

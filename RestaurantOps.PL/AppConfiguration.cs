@@ -24,10 +24,6 @@ namespace RestaurantOps.PL
             services.AddScoped<IJobTitleService, JobTitleService>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IShiftRepository, ShiftRepository>();
-            services.AddScoped<IShiftService, ShiftService>();
-            services.AddScoped<IInventoryOrderRepository, InventoryOrderRepository>();
-            services.AddScoped<IInventoryOrderService, InventoryOrderService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
@@ -35,12 +31,10 @@ namespace RestaurantOps.PL
             services.AddScoped<ISeedData, SeedData>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmailSender, EmailSetting>();
-            services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<ISupplierService, SupplierService>();
-            services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ReportPdfService>();
         }
     }

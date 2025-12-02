@@ -2,6 +2,7 @@
 {
     public interface ISeedData
     {
+        Task DataSeedingAsync();
         Task IdentityDataSeedingAsync();
     }
 }
