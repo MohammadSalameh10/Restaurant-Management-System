@@ -25,6 +25,16 @@ namespace RestaurantOps.PL
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             var connectionString =
              builder.Configuration.GetConnectionString("DefaultConnection")
               ?? throw new InvalidOperationException("Connection string"
@@ -85,9 +95,12 @@ namespace RestaurantOps.PL
             await objectOfSeedData.IdentityDataSeedingAsync();
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseAuthorization();
 
+            app.UseAuthentication();
+
+            app.UseCors();
+
+            app.UseAuthorization();
 
             app.MapControllers();
 

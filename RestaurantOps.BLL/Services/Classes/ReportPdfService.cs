@@ -3,7 +3,6 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
-
 namespace RestaurantOps.BLL.Services.Classes
 {
     public class ReportPdfService
@@ -16,10 +15,9 @@ namespace RestaurantOps.BLL.Services.Classes
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public IDocument CreateSalesReportDocument()
+        public async Task<byte[]> GenerateSalesReportPdfAsync()
         {
-            // استخدام نسخة Async لكن بشكل Sync داخل هذا الميثود
-            var orders = _orderRepository.GetAllWithDetailsAsync().Result;
+            var orders = await _orderRepository.GetAllWithDetailsAsync();
 
             var today = DateTime.UtcNow.Date;
             var thisMonth = new DateTime(today.Year, today.Month, 1);
@@ -30,7 +28,7 @@ namespace RestaurantOps.BLL.Services.Classes
             var todayRevenue = todayOrders.Sum(o => o.OrderItems.Sum(i => i.Quantity * i.Price));
             var monthlyRevenue = monthlyOrders.Sum(o => o.OrderItems.Sum(i => i.Quantity * i.Price));
 
-            return Document.Create(container =>
+            var document = Document.Create(container =>
             {
                 container.Page(page =>
                 {
@@ -83,11 +81,11 @@ namespace RestaurantOps.BLL.Services.Classes
                                 {
                                     table.ColumnsDefinition(cols =>
                                     {
-                                        cols.ConstantColumn(50);
-                                        cols.ConstantColumn(80);
-                                        cols.RelativeColumn();
-                                        cols.ConstantColumn(80);
-                                        cols.ConstantColumn(80);
+                                        cols.ConstantColumn(50);   // ID
+                                        cols.ConstantColumn(80);   // Date
+                                        cols.RelativeColumn();     // Customer
+                                        cols.ConstantColumn(80);   // Status
+                                        cols.ConstantColumn(80);   // Total
                                     });
 
                                     table.Header(h =>
@@ -124,6 +122,10 @@ namespace RestaurantOps.BLL.Services.Classes
                         });
                 });
             });
+
+            // توليد الـ PDF كـ byte[]
+            var pdfBytes = document.GeneratePdf();
+            return pdfBytes;
         }
     }
 }
