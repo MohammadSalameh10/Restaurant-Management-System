@@ -20,16 +20,16 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<InventoryItemResponse>> GetAll()
+        public async Task<ActionResult<List<InventoryItemResponse>>> GetAll()
         {
-            var items = _inventoryItemService.GetAll();
+            var items = await _inventoryItemService.GetAllAsync();
             return Ok(items);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<InventoryItemResponse> GetById(int id)
+        public async Task<ActionResult<InventoryItemResponse>> GetById(int id)
         {
-            var item = _inventoryItemService.GetById(id);
+            var item = await _inventoryItemService.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
 
@@ -37,12 +37,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] InventoryItemRequest request)
+        public async Task<ActionResult> Create([FromBody] InventoryItemRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _inventoryItemService.Create(request);
+            var success = await _inventoryItemService.CreateAsync(request);
             if (!success)
                 return BadRequest("Unable to create inventory item.");
 
@@ -50,12 +50,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] InventoryItemRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] InventoryItemRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _inventoryItemService.Update(id, request);
+            var success = await _inventoryItemService.UpdateAsync(id, request);
             if (!success)
                 return NotFound();
 
@@ -63,9 +63,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _inventoryItemService.Delete(id);
+            var success = await _inventoryItemService.DeleteAsync(id);
             if (!success)
                 return NotFound();
 
@@ -73,9 +73,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet("low-stock")]
-        public ActionResult<List<InventoryItemResponse>> GetLowStock([FromQuery] decimal threshold = 10)
+        public async Task<ActionResult<List<InventoryItemResponse>>> GetLowStock([FromQuery] decimal threshold = 10)
         {
-            var items = _inventoryItemService.GetLowStock(threshold);
+            var items = await _inventoryItemService.GetLowStockAsync(threshold);
             return Ok(items);
         }
     }

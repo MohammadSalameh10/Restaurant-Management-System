@@ -20,47 +20,47 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<OrderTypeResponse>> GetAll()
+        public async Task<ActionResult<List<OrderTypeResponse>>> GetAll()
         {
-            var list = _orderTypeService.GetAll();
+            var list = await _orderTypeService.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<OrderTypeResponse> GetById(int id)
+        public async Task<ActionResult<OrderTypeResponse>> GetById(int id)
         {
-            var item = _orderTypeService.GetById(id);
+            var item = await _orderTypeService.GetByIdAsync(id);
             if (item == null) return NotFound();
 
             return Ok(item);
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] OrderTypeRequest request)
+        public async Task<ActionResult> Create([FromBody] OrderTypeRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _orderTypeService.Create(request);
+            var ok = await _orderTypeService.CreateAsync(request);
             if (!ok) return BadRequest("Unable to create order type.");
 
             return Ok("Order type created.");
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] OrderTypeRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] OrderTypeRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _orderTypeService.Update(id, request);
+            var ok = await _orderTypeService.UpdateAsync(id, request);
             if (!ok) return NotFound();
 
             return Ok("Order type updated.");
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var ok = _orderTypeService.Delete(id);
+            var ok = await _orderTypeService.DeleteAsync(id);
             if (!ok) return NotFound();
 
             return Ok("Order type deleted.");

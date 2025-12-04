@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
+using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 using CustomerModel = RestaurantOps.DAL.Models.Customer;
 
@@ -19,7 +20,10 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         private readonly IPaymentService _paymentService;
         private readonly ICustomerRepository _customerRepository;
 
-        public OrdersController(IOrderService orderService, IPaymentService paymentService, ICustomerRepository customerRepository)
+        public OrdersController(
+            IOrderService orderService,
+            IPaymentService paymentService,
+            ICustomerRepository customerRepository)
         {
             _orderService = orderService;
             _paymentService = paymentService;
@@ -27,7 +31,7 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateOrder([FromBody] OrderCreateRequest request)
+        public async Task<ActionResult> CreateOrder([FromBody] CustomerOrderCreateRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -36,24 +40,40 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var customer = _customerRepository.GetByUserId(userId);
+            
+            var customer = await _customerRepository.GetByUserIdAsync(userId);
 
+          
             if (customer == null)
             {
                 customer = new CustomerModel
                 {
-                    Name = "Customer",
+                    Name = User.Identity?.Name ?? "Customer",
                     PhoneNumber = "",
-                    UserId = userId
+                    UserId = userId,
+                    LocationId = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = Status.Active
                 };
 
-                _customerRepository.Add(customer);
-                _customerRepository.Save();
+                await _customerRepository.AddAsync(customer);
+                await _customerRepository.SaveAsync();
             }
 
-            request.CustomerId = customer.Id;
+           
+            var orderRequest = new OrderCreateRequest
+            {
+                CustomerId = customer.Id,
+                EmployeeId = null,
+                OrderTypeId = request.OrderTypeId,
+                Items = request.Items.Select(i => new OrderItemCreateRequest
+                {
+                    MenuItemId = i.MenuItemId,
+                    Quantity = i.Quantity
+                }).ToList()
+            };
 
-            var orderId = _orderService.CreateOrder(request);
+            var orderId = await _orderService.CreateOrderAsync(orderRequest);
 
             if (orderId == 0)
                 return BadRequest("Insufficient inventory for one or more items.");
@@ -62,9 +82,9 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<OrderResponse> GetById(int id)
+        public async Task<ActionResult<OrderResponse>> GetById(int id)
         {
-            var order = _orderService.GetById(id);
+            var order = await _orderService.GetByIdAsync(id);
             if (order == null)
                 return NotFound();
 
@@ -72,18 +92,24 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         }
 
         [HttpPost("{id}/pay")]
-        public async Task<ActionResult> PayOrder(int id, [FromBody] string method)
+        public async Task<ActionResult> PayOrder(int id, [FromBody] PayOrderRequest model)
         {
-            if (string.IsNullOrWhiteSpace(method))
-                method = "Cash";
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var method = string.IsNullOrWhiteSpace(model?.Method)
+                ? "Cash"
+                : model.Method.Trim();
 
             var request = new OrderPaymentRequest
             {
                 OrderId = id,
                 Method = method
             };
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var response = await _paymentService.ProcessOrderPaymentAsync(request, userId, Request);
+
             if (!response.Success)
                 return BadRequest(new { response.Message });
 
@@ -91,29 +117,28 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
         }
 
         [HttpGet("my")]
-        public ActionResult<List<OrderResponse>> GetMyOrders()
+        public async Task<ActionResult<List<OrderResponse>>> GetMyOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var orders = _orderService.GetCustomerOrders(userId);
+            var orders = await _orderService.GetCustomerOrdersAsync(userId);
             return Ok(orders);
         }
 
         [HttpPatch("{id}/cancel")]
-        public ActionResult CancelMyOrder(int id)
+        public async Task<ActionResult> CancelMyOrder(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var success = _orderService.CancelOrderForCustomer(id, userId);
+            var success = await _orderService.CancelOrderForCustomerAsync(id, userId);
             if (!success)
                 return BadRequest("Unable to cancel this order.");
 
             return Ok("Order canceled successfully.");
         }
-
     }
 }

@@ -6,8 +6,8 @@
         public Order Order { get; set; }
         public decimal Amount { get; set; }
         public string Method { get; set; }
-        public string Provider { get; set; }
-        public string ProviderPaymentId { get; set; }
+        public string? Provider { get; set; }
+        public string? ProviderPaymentId { get; set; }
         public DateTime PaidAt { get; set; }
 
     }

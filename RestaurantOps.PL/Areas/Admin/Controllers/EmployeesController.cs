@@ -20,47 +20,47 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<EmployeeResponse>> GetAll()
+        public async Task<ActionResult<List<EmployeeResponse>>> GetAll()
         {
-            var list = _employeeService.GetAll();
+            var list = await _employeeService.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<EmployeeResponse> GetById(int id)
+        public async Task<ActionResult<EmployeeResponse>> GetById(int id)
         {
-            var employee = _employeeService.GetById(id);
+            var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null) return NotFound();
 
             return Ok(employee);
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] EmployeeRequest request)
+        public async Task<ActionResult> Create([FromBody] EmployeeRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _employeeService.Create(request);
+            var ok = await _employeeService.CreateAsync(request);
             if (!ok) return BadRequest("Unable to create employee.");
 
             return Ok("Employee created.");
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] EmployeeRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] EmployeeRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _employeeService.Update(id, request);
+            var ok = await _employeeService.UpdateAsync(id, request);
             if (!ok) return NotFound();
 
             return Ok("Employee updated.");
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var ok = _employeeService.Delete(id);
+            var ok = await _employeeService.DeleteAsync(id);
             if (!ok) return NotFound();
 
             return Ok("Employee deleted.");

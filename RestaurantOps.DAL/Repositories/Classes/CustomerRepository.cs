@@ -14,44 +14,48 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Customer> GetAll()
+        public async Task<List<Customer>> GetAllAsync()
         {
-            return _context.Customers
+            return await _context.Customers
                 .Include(c => c.Location)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Customer GetById(int id)
+        public async Task<Customer?> GetByIdAsync(int id)
         {
-            return _context.Customers.Include(c => c.Location)
-                .FirstOrDefault(c => c.Id == id);
+            return await _context.Customers
+                .Include(c => c.Location)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public void Add(Customer customer)
+        public async Task AddAsync(Customer customer)
         {
             customer.CreatedAt = DateTime.UtcNow;
-            customer.status = Status.Active;
-            _context.Customers.Add(customer);
+            customer.Status = Status.Active;
+            await _context.Customers.AddAsync(customer);
         }
 
-        public void Update(Customer customer)
+        public Task UpdateAsync(Customer customer)
         {
             _context.Customers.Update(customer);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Customer customer)
+        public Task DeleteAsync(Customer customer)
         {
             _context.Customers.Remove(customer);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Customer GetByUserId(string userId)
+        public async Task<Customer?> GetByUserIdAsync(string userId)
         {
-            return _context.Customers.FirstOrDefault(c => c.UserId == userId);
+            return await _context.Customers
+                .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
     }

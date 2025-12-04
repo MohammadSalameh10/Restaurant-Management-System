@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
@@ -13,43 +14,50 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<InventoryItem> GetAll()
+        public async Task<List<InventoryItem>> GetAllAsync()
         {
-            return _context.InventoryItems.ToList();
+            return await _context.InventoryItems
+                .Include(i => i.Supplier)
+                .ToListAsync();
         }
 
-        public InventoryItem GetById(int id)
+        public async Task<InventoryItem?> GetByIdAsync(int id)
         {
-            return _context.InventoryItems.FirstOrDefault(i => i.Id == id);
+            return await _context.InventoryItems
+                .Include(i => i.Supplier)
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public void Add(InventoryItem item)
+        public async Task AddAsync(InventoryItem item)
         {
             item.CreatedAt = DateTime.UtcNow;
-            item.status = Status.Active;
-            _context.InventoryItems.Add(item);
+            item.Status = Status.Active;
+            await _context.InventoryItems.AddAsync(item);
         }
 
-        public void Update(InventoryItem item)
+        public Task UpdateAsync(InventoryItem item)
         {
             _context.InventoryItems.Update(item);
+            return Task.CompletedTask;
         }
 
-        public void Delete(InventoryItem item)
+        public Task DeleteAsync(InventoryItem item)
         {
             _context.InventoryItems.Remove(item);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public List<InventoryItem> GetLowStockItems(decimal threshold)
+        public async Task<List<InventoryItem>> GetLowStockItemsAsync(decimal threshold)
         {
-            return _context.InventoryItems
+            return await _context.InventoryItems
+                .Include(i => i.Supplier)
                 .Where(i => i.Stock <= threshold)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

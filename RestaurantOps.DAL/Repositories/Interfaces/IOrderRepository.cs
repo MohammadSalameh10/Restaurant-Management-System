@@ -4,13 +4,13 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        List<Order> GetAll();
-        Order GetById(int id);
-        void Add(Order order);
-        void Update(Order order);
-        void Delete(Order order);
-        void Save();
-        Order GetOrderWithDetails(int id);
-        List<Order> GetAllWithDetails();
+        Task<List<Order>> GetAllAsync();
+        Task<Order?> GetByIdAsync(int id);
+        Task AddAsync(Order order);
+        Task UpdateAsync(Order order);
+        Task DeleteAsync(Order order);
+        Task SaveAsync();
+        Task<Order?> GetOrderWithDetailsAsync(int id);
+        Task<List<Order>> GetAllWithDetailsAsync();
     }
 }

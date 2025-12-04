@@ -31,9 +31,9 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.Locations.AnyAsync())
             {
                 await _context.Locations.AddRangeAsync(
-                    new Location { City = "Ramallah", Street = "Al-Tireh", CreatedAt = now, status = Status.Active },
-                    new Location { City = "Nablus", Street = "Downtown", CreatedAt = now, status = Status.Active },
-                    new Location { City = "Hebron", Street = "City Center", CreatedAt = now, status = Status.Active }
+                    new Location { City = "Ramallah", Street = "Al-Tireh", CreatedAt = now, Status = Status.Active },
+                    new Location { City = "Nablus", Street = "Downtown", CreatedAt = now, Status = Status.Active },
+                    new Location { City = "Hebron", Street = "City Center", CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -43,9 +43,9 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.JobTitles.AnyAsync())
             {
                 await _context.JobTitles.AddRangeAsync(
-                    new JobTitle { Name = "Chef", Description = "Main kitchen chef", PayRate = 25, CreatedAt = now, status = Status.Active },
-                    new JobTitle { Name = "Waiter", Description = "Serves customers", PayRate = 15, CreatedAt = now, status = Status.Active },
-                    new JobTitle { Name = "Cashier", Description = "Handles payments", PayRate = 18, CreatedAt = now, status = Status.Active }
+                    new JobTitle { Name = "Chef", Description = "Main kitchen chef", PayRate = 25, CreatedAt = now, Status = Status.Active },
+                    new JobTitle { Name = "Waiter", Description = "Serves customers", PayRate = 15, CreatedAt = now, Status = Status.Active },
+                    new JobTitle { Name = "Cashier", Description = "Handles payments", PayRate = 18, CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -53,8 +53,8 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.Suppliers.AnyAsync())
             {
                 await _context.Suppliers.AddRangeAsync(
-                    new Supplier { Name = "Fresh Foods Supplier", PhoneNum = "0599000000", LocationId = defaultLocation.Id, CreatedAt = now, status = Status.Active },
-                    new Supplier { Name = "Cold Drinks Supplier", PhoneNum = "0599111111", LocationId = defaultLocation.Id, CreatedAt = now, status = Status.Active }
+                    new Supplier { Name = "Fresh Foods Supplier", PhoneNumber = "0599000000", LocationId = defaultLocation.Id, CreatedAt = now, Status = Status.Active },
+                    new Supplier { Name = "Cold Drinks Supplier", PhoneNumber = "0599111111", LocationId = defaultLocation.Id, CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -65,10 +65,10 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.InventoryItems.AnyAsync())
             {
                 await _context.InventoryItems.AddRangeAsync(
-                    new InventoryItem { Name = "Flour", Stock = 100, SupplierId = mainSupplier.Id, CreatedAt = now, status = Status.Active },
-                    new InventoryItem { Name = "Cheese", Stock = 50, SupplierId = mainSupplier.Id, CreatedAt = now, status = Status.Active },
-                    new InventoryItem { Name = "Beef", Stock = 40, SupplierId = mainSupplier.Id, CreatedAt = now, status = Status.Active },
-                    new InventoryItem { Name = "Cola", Stock = 80, SupplierId = mainSupplier.Id, CreatedAt = now, status = Status.Active }
+                    new InventoryItem { Name = "Flour", Stock = 100, SupplierId = mainSupplier.Id, CreatedAt = now, Status = Status.Active },
+                    new InventoryItem { Name = "Cheese", Stock = 50, SupplierId = mainSupplier.Id, CreatedAt = now, Status = Status.Active },
+                    new InventoryItem { Name = "Beef", Stock = 40, SupplierId = mainSupplier.Id, CreatedAt = now, Status = Status.Active },
+                    new InventoryItem { Name = "Cola", Stock = 80, SupplierId = mainSupplier.Id, CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -78,9 +78,9 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.MenuItems.AnyAsync())
             {
                 await _context.MenuItems.AddRangeAsync(
-                    new MenuItem { ItemName = "Cheese Burger", Description = "Burger with beef and cheese", IsAvailable = true, CreatedAt = now, status = Status.Active },
-                    new MenuItem { ItemName = "Margherita Pizza", Description = "Classic pizza with cheese", IsAvailable = true, CreatedAt = now, status = Status.Active },
-                    new MenuItem { ItemName = "Cola Drink", Description = "Cold soft drink", IsAvailable = true, CreatedAt = now, status = Status.Active }
+                    new MenuItem { ItemName = "Cheese Burger", Description = "Burger with beef and cheese", IsAvailable = true, Price = 25, CreatedAt = now, Status = Status.Active },
+                    new MenuItem { ItemName = "Margherita Pizza", Description = "Classic pizza with cheese", IsAvailable = true, Price = 30, CreatedAt = now, Status = Status.Active },
+                    new MenuItem { ItemName = "Cola Drink", Description = "Cold soft drink", IsAvailable = true, Price = 5, CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -101,19 +101,19 @@ namespace RestaurantOps.DAL.Utils
                 var list = new List<MenuItemIngredient>();
 
                 if (burger != null && meat != null)
-                    list.Add(new MenuItemIngredient { MenuItemId = burger.Id, InventoryItemId = meat.Id, Quantity = 0.2m, CreatedAt = now, status = Status.Active });
+                    list.Add(new MenuItemIngredient { MenuItemId = burger.Id, InventoryItemId = meat.Id, Quantity = 0.2m, CreatedAt = now, Status = Status.Active });
 
                 if (burger != null && cheese != null)
-                    list.Add(new MenuItemIngredient { MenuItemId = burger.Id, InventoryItemId = cheese.Id, Quantity = 0.05m, CreatedAt = now, status = Status.Active });
+                    list.Add(new MenuItemIngredient { MenuItemId = burger.Id, InventoryItemId = cheese.Id, Quantity = 0.05m, CreatedAt = now, Status = Status.Active });
 
                 if (pizza != null && flour != null)
-                    list.Add(new MenuItemIngredient { MenuItemId = pizza.Id, InventoryItemId = flour.Id, Quantity = 0.3m, CreatedAt = now, status = Status.Active });
+                    list.Add(new MenuItemIngredient { MenuItemId = pizza.Id, InventoryItemId = flour.Id, Quantity = 0.3m, CreatedAt = now, Status = Status.Active });
 
                 if (pizza != null && cheese != null)
-                    list.Add(new MenuItemIngredient { MenuItemId = pizza.Id, InventoryItemId = cheese.Id, Quantity = 0.08m, CreatedAt = now, status = Status.Active });
+                    list.Add(new MenuItemIngredient { MenuItemId = pizza.Id, InventoryItemId = cheese.Id, Quantity = 0.08m, CreatedAt = now, Status = Status.Active });
 
                 if (drink != null && cola != null)
-                    list.Add(new MenuItemIngredient { MenuItemId = drink.Id, InventoryItemId = cola.Id, Quantity = 1m, CreatedAt = now, status = Status.Active });
+                    list.Add(new MenuItemIngredient { MenuItemId = drink.Id, InventoryItemId = cola.Id, Quantity = 1m, CreatedAt = now, Status = Status.Active });
 
                 if (list.Any())
                 {
@@ -125,9 +125,9 @@ namespace RestaurantOps.DAL.Utils
             if (!await _context.OrderTypes.AnyAsync())
             {
                 await _context.OrderTypes.AddRangeAsync(
-                    new OrderType { Name = "Dine In", CreatedAt = now, status = Status.Active },
-                    new OrderType { Name = "Take Away", CreatedAt = now, status = Status.Active },
-                    new OrderType { Name = "Delivery", CreatedAt = now, status = Status.Active }
+                    new OrderType { Name = "Dine In", CreatedAt = now, Status = Status.Active },
+                    new OrderType { Name = "Take Away", CreatedAt = now, Status = Status.Active },
+                    new OrderType { Name = "Delivery", CreatedAt = now, Status = Status.Active }
                 );
                 await _context.SaveChangesAsync();
             }
@@ -176,7 +176,28 @@ namespace RestaurantOps.DAL.Utils
                 await _userManager.AddToRoleAsync(user1, "Admin");
                 await _userManager.AddToRoleAsync(user2, "Customer");
                 await _userManager.AddToRoleAsync(user3, "Employee");
+
+                _context.Customers.Add(new Customer
+                {
+                    UserId = user2.Id,
+                    Name = user2.FullName,
+                    PhoneNumber = user2.PhoneNumber,
+                    LocationId = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = Status.Active
+                });
+
+                _context.Employees.Add(new Employee
+                {
+                    UserId = user3.Id,
+                    Name = user3.FullName,
+                    DateOfBirth = new DateTime(1998, 1, 1),
+                    JobTitleId = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = Status.Active
+                });
             }
+            
 
             await _context.SaveChangesAsync();
         }

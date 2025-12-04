@@ -4,13 +4,13 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface ICustomerRepository
     {
-        List<Customer> GetAll();
-        Customer GetById(int id);
-        void Add(Customer customer);
-        void Update(Customer customer);
-        void Delete(Customer customer);
-        void Save();
-        Customer GetByUserId(string userId);
+        Task<List<Customer>> GetAllAsync();
+        Task<Customer?> GetByIdAsync(int id);
+        Task AddAsync(Customer customer);
+        Task UpdateAsync(Customer customer);
+        Task DeleteAsync(Customer customer);
+        Task SaveAsync();
+        Task<Customer?> GetByUserIdAsync(string userId);
 
     }
 }

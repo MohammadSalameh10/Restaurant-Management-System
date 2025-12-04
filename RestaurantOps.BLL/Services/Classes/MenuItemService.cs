@@ -16,53 +16,53 @@ namespace RestaurantOps.BLL.Services.Classes
             _menuItemRepository = menuItemRepository;
         }
 
-        public List<MenuItemResponse> GetAll()
+        public async Task<List<MenuItemResponse>> GetAllAsync()
         {
-            var items = _menuItemRepository.GetAll();
-
+            var items = await _menuItemRepository.GetAllAsync();
             return items.Adapt<List<MenuItemResponse>>();
         }
 
-        public MenuItemResponse GetById(int id)
+        public async Task<MenuItemResponse?> GetByIdAsync(int id)
         {
-            var item = _menuItemRepository.GetById(id);
+            var item = await _menuItemRepository.GetByIdAsync(id);
             return item?.Adapt<MenuItemResponse>();
         }
 
-        public bool Create(MenuItemRequest request)
+        public async Task<bool> CreateAsync(MenuItemRequest request)
         {
             if (request == null)
                 return false;
 
             var entity = request.Adapt<MenuItem>();
 
-            _menuItemRepository.Add(entity);
-            _menuItemRepository.Save();
+            await _menuItemRepository.AddAsync(entity);
+            await _menuItemRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, MenuItemRequest request)
+        public async Task<bool> UpdateAsync(int id, MenuItemRequest request)
         {
-            var item = _menuItemRepository.GetById(id);
+            var item = await _menuItemRepository.GetByIdAsync(id);
             if (item == null)
                 return false;
 
             request.Adapt(item);
 
-            _menuItemRepository.Update(item);
-            _menuItemRepository.Save();
+            await _menuItemRepository.UpdateAsync(item);
+            await _menuItemRepository.SaveAsync();
 
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _menuItemRepository.GetById(id);
+            var item = await _menuItemRepository.GetByIdAsync(id);
             if (item == null)
                 return false;
 
-            _menuItemRepository.Delete(item);
-            _menuItemRepository.Save();
+            await _menuItemRepository.DeleteAsync(item);
+            await _menuItemRepository.SaveAsync();
 
             return true;
         }

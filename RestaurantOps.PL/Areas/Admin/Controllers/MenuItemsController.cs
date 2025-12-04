@@ -19,19 +19,17 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             _menuItemService = menuItemService;
         }
 
-    
         [HttpGet]
-        public ActionResult<List<MenuItemResponse>> GetAll()
+        public async Task<ActionResult<List<MenuItemResponse>>> GetAll()
         {
-            var items = _menuItemService.GetAll();
+            var items = await _menuItemService.GetAllAsync();
             return Ok(items);
         }
 
-        
         [HttpGet("{id}")]
-        public ActionResult<MenuItemResponse> GetById(int id)
+        public async Task<ActionResult<MenuItemResponse>> GetById(int id)
         {
-            var item = _menuItemService.GetById(id);
+            var item = await _menuItemService.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
 
@@ -39,37 +37,35 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(MenuItemRequest request)
+        public async Task<ActionResult> Create([FromBody] MenuItemRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _menuItemService.Create(request);
+            var success = await _menuItemService.CreateAsync(request);
             if (!success)
                 return BadRequest("Unable to create menu item.");
 
             return Ok("Menu item created successfully.");
         }
 
-      
         [HttpPut("{id}")]
-        public ActionResult Update(int id, MenuItemRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] MenuItemRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _menuItemService.Update(id, request);
+            var success = await _menuItemService.UpdateAsync(id, request);
             if (!success)
                 return NotFound();
 
             return Ok("Menu item updated.");
         }
 
-       
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _menuItemService.Delete(id);
+            var success = await _menuItemService.DeleteAsync(id);
             if (!success)
                 return NotFound();
 

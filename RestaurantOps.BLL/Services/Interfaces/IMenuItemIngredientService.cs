@@ -5,10 +5,10 @@ namespace RestaurantOps.BLL.Services.Interfaces
 {
     public interface IMenuItemIngredientService
     {
-        List<MenuItemIngredientResponse> GetAll();
-        MenuItemIngredientResponse GetById(int id);
-        bool Create(MenuItemIngredientRequest request);
-        bool Update(int id, MenuItemIngredientRequest request);
-        bool Delete(int id);
+        Task<List<MenuItemIngredientResponse>> GetAllAsync();
+        Task<MenuItemIngredientResponse?> GetByIdAsync(int id);
+        Task<bool> CreateAsync(MenuItemIngredientRequest request);
+        Task<bool> UpdateAsync(int id, MenuItemIngredientRequest request);
+        Task<bool> DeleteAsync(int id);
     }
 }

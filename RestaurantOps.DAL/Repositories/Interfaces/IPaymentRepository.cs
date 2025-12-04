@@ -4,12 +4,12 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface IPaymentRepository
     {
-        List<Payment> GetAll();
-        Payment GetById(int id);
-        Payment GetByOrderId(int orderId);
-        void Add(Payment payment);
-        void Update(Payment payment);
-        void Delete(Payment payment);
-        void Save();
+        Task<List<Payment>> GetAllAsync();
+        Task<Payment?> GetByIdAsync(int id);
+        Task<Payment?> GetByOrderIdAsync(int orderId);
+        Task AddAsync(Payment payment);
+        Task UpdateAsync(Payment payment);
+        Task DeleteAsync(Payment payment);
+        Task SaveAsync();
     }
 }

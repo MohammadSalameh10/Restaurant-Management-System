@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RestaurantOps.BLL.MapsterConfigurations;
 using RestaurantOps.BLL.Services.Classes;
 using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
@@ -46,6 +47,8 @@ namespace RestaurantOps.PL
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             builder.Services.AddConfig();
+
+            builder.Services.MapsterConfigRegister();
 
             builder.Services.AddAuthentication(options =>
             {

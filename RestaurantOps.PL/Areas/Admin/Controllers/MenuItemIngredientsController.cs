@@ -20,16 +20,16 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<MenuItemIngredientResponse>> GetAll()
+        public async Task<ActionResult<List<MenuItemIngredientResponse>>> GetAll()
         {
-            var list = _menuItemIngredientService.GetAll();
+            var list = await _menuItemIngredientService.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<MenuItemIngredientResponse> GetById(int id)
+        public async Task<ActionResult<MenuItemIngredientResponse>> GetById(int id)
         {
-            var item = _menuItemIngredientService.GetById(id);
+            var item = await _menuItemIngredientService.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
 
@@ -37,12 +37,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] MenuItemIngredientRequest request)
+        public async Task<ActionResult> Create([FromBody] MenuItemIngredientRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ok = _menuItemIngredientService.Create(request);
+            var ok = await _menuItemIngredientService.CreateAsync(request);
             if (!ok)
                 return BadRequest("Unable to create menu item ingredient.");
 
@@ -50,12 +50,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] MenuItemIngredientRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] MenuItemIngredientRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ok = _menuItemIngredientService.Update(id, request);
+            var ok = await _menuItemIngredientService.UpdateAsync(id, request);
             if (!ok)
                 return NotFound();
 
@@ -63,9 +63,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var ok = _menuItemIngredientService.Delete(id);
+            var ok = await _menuItemIngredientService.DeleteAsync(id);
             if (!ok)
                 return NotFound();
 

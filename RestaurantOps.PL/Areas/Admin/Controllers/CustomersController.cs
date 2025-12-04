@@ -20,16 +20,16 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<CustomerResponse>> GetAll()
+        public async Task<ActionResult<List<CustomerResponse>>> GetAll()
         {
-            var customers = _customerService.GetAll();
+            var customers = await _customerService.GetAllAsync();
             return Ok(customers);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CustomerResponse> GetById(int id)
+        public async Task<ActionResult<CustomerResponse>> GetById(int id)
         {
-            var customer = _customerService.GetById(id);
+            var customer = await _customerService.GetByIdAsync(id);
             if (customer == null)
                 return NotFound();
 
@@ -37,12 +37,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] CustomerRequest request)
+        public async Task<ActionResult> Create([FromBody] CustomerRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _customerService.Create(request);
+            var success = await _customerService.CreateAsync(request);
             if (!success)
                 return BadRequest("Unable to create customer.");
 
@@ -50,12 +50,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] CustomerRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] CustomerRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var success = _customerService.Update(id, request);
+            var success = await _customerService.UpdateAsync(id, request);
             if (!success)
                 return NotFound();
 
@@ -63,9 +63,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _customerService.Delete(id);
+            var success = await _customerService.DeleteAsync(id);
             if (!success)
                 return NotFound();
 

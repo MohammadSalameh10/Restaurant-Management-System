@@ -16,48 +16,54 @@ namespace RestaurantOps.BLL.Services.Classes
             _orderTypeRepository = orderTypeRepository;
         }
 
-        public List<OrderTypeResponse> GetAll()
+        public async Task<List<OrderTypeResponse>> GetAllAsync()
         {
-            var list = _orderTypeRepository.GetAll();
+            var list = await _orderTypeRepository.GetAllAsync();
             return list.Adapt<List<OrderTypeResponse>>();
         }
 
-        public OrderTypeResponse GetById(int id)
+        public async Task<OrderTypeResponse?> GetByIdAsync(int id)
         {
-            var type = _orderTypeRepository.GetById(id);
+            var type = await _orderTypeRepository.GetByIdAsync(id);
             return type?.Adapt<OrderTypeResponse>();
         }
 
-        public bool Create(OrderTypeRequest request)
+        public async Task<bool> CreateAsync(OrderTypeRequest request)
         {
-            if (request == null) return false;
+            if (request == null)
+                return false;
 
             var entity = request.Adapt<OrderType>();
 
-            _orderTypeRepository.Add(entity);
-            _orderTypeRepository.Save();
+            await _orderTypeRepository.AddAsync(entity);
+            await _orderTypeRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, OrderTypeRequest request)
+        public async Task<bool> UpdateAsync(int id, OrderTypeRequest request)
         {
-            var entity = _orderTypeRepository.GetById(id);
-            if (entity == null) return false;
+            var entity = await _orderTypeRepository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
 
             request.Adapt(entity);
 
-            _orderTypeRepository.Update(entity);
-            _orderTypeRepository.Save();
+            await _orderTypeRepository.UpdateAsync(entity);
+            await _orderTypeRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var entity = _orderTypeRepository.GetById(id);
-            if (entity == null) return false;
+            var entity = await _orderTypeRepository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
 
-            _orderTypeRepository.Delete(entity);
-            _orderTypeRepository.Save();
+            await _orderTypeRepository.DeleteAsync(entity);
+            await _orderTypeRepository.SaveAsync();
+
             return true;
         }
     }

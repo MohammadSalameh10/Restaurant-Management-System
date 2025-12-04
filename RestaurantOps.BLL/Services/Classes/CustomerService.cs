@@ -16,22 +16,22 @@ namespace RestaurantOps.BLL.Services.Classes
             _customerRepository = customerRepository;
         }
 
-        public List<CustomerResponse> GetAll()
+        public async Task<List<CustomerResponse>> GetAllAsync()
         {
-            var customers = _customerRepository.GetAll();
+            var customers = await _customerRepository.GetAllAsync();
             return customers.Adapt<List<CustomerResponse>>();
         }
 
-        public CustomerResponse GetById(int id)
+        public async Task<CustomerResponse?> GetByIdAsync(int id)
         {
-            var customer = _customerRepository.GetById(id);
+            var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)
                 return null;
 
             return customer.Adapt<CustomerResponse>();
         }
 
-        public bool Create(CustomerRequest request)
+        public async Task<bool> CreateAsync(CustomerRequest request)
         {
             if (request == null)
                 return false;
@@ -43,14 +43,15 @@ namespace RestaurantOps.BLL.Services.Classes
                 LocationId = request.LocationId
             };
 
-            _customerRepository.Add(entity);
-            _customerRepository.Save();
+            await _customerRepository.AddAsync(entity);
+            await _customerRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, CustomerRequest request)
+        public async Task<bool> UpdateAsync(int id, CustomerRequest request)
         {
-            var customer = _customerRepository.GetById(id);
+            var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)
                 return false;
 
@@ -58,19 +59,21 @@ namespace RestaurantOps.BLL.Services.Classes
             customer.PhoneNumber = request.PhoneNumber;
             customer.LocationId = request.LocationId;
 
-            _customerRepository.Update(customer);
-            _customerRepository.Save();
+            await _customerRepository.UpdateAsync(customer);
+            await _customerRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var customer = _customerRepository.GetById(id);
+            var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)
                 return false;
 
-            _customerRepository.Delete(customer);
-            _customerRepository.Save();
+            await _customerRepository.DeleteAsync(customer);
+            await _customerRepository.SaveAsync();
+
             return true;
         }
     }

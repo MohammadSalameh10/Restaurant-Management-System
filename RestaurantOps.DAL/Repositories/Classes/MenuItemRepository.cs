@@ -14,45 +14,48 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<MenuItem> GetAll()
+        public async Task<List<MenuItem>> GetAllAsync()
         {
-            return _context.MenuItems.ToList();
+            return await _context.MenuItems.ToListAsync();
         }
 
-        public List<MenuItem> GetByIdsWithIngredients(List<int> id)
+        public async Task<List<MenuItem>> GetByIdsWithIngredientsAsync(List<int> ids)
         {
-            return _context.MenuItems
+            return await _context.MenuItems
                 .Include(m => m.Ingredients)
-                .ThenInclude(i => i.InventoryItem)
-                .Where(m => id.Contains(m.Id))
-                .ToList();
-        }
-        public MenuItem GetById(int id)
-        {
-            return _context.MenuItems.FirstOrDefault(m => m.Id == id);
+                    .ThenInclude(i => i.InventoryItem)
+                .Where(m => ids.Contains(m.Id))
+                .ToListAsync();
         }
 
-        public void Add(MenuItem menuItem)
+        public async Task<MenuItem?> GetByIdAsync(int id)
+        {
+            return await _context.MenuItems
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task AddAsync(MenuItem menuItem)
         {
             menuItem.CreatedAt = DateTime.UtcNow;
-            menuItem.status = Status.Active;
-
-            _context.MenuItems.Add(menuItem);
+            menuItem.Status = Status.Active;
+            await _context.MenuItems.AddAsync(menuItem);
         }
 
-        public void Update(MenuItem menuItem)
+        public Task UpdateAsync(MenuItem menuItem)
         {
             _context.MenuItems.Update(menuItem);
+            return Task.CompletedTask;
         }
 
-        public void Delete(MenuItem menuItem)
+        public Task DeleteAsync(MenuItem menuItem)
         {
             _context.MenuItems.Remove(menuItem);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

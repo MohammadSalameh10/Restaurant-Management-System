@@ -16,23 +16,19 @@ namespace RestaurantOps.BLL.Services.Classes
             _inventoryItemRepository = inventoryItemRepository;
         }
 
-        public List<InventoryItemResponse> GetAll()
+        public async Task<List<InventoryItemResponse>> GetAllAsync()
         {
-            var items = _inventoryItemRepository.GetAll();
-
+            var items = await _inventoryItemRepository.GetAllAsync();
             return items.Adapt<List<InventoryItemResponse>>();
         }
 
-        public InventoryItemResponse GetById(int id)
+        public async Task<InventoryItemResponse?> GetByIdAsync(int id)
         {
-            var item = _inventoryItemRepository.GetById(id);
-            if (item == null)
-                return null;
-
-            return item.Adapt<InventoryItemResponse>();
+            var item = await _inventoryItemRepository.GetByIdAsync(id);
+            return item?.Adapt<InventoryItemResponse>();
         }
 
-        public bool Create(InventoryItemRequest request)
+        public async Task<bool> CreateAsync(InventoryItemRequest request)
         {
             if (request == null)
                 return false;
@@ -44,14 +40,15 @@ namespace RestaurantOps.BLL.Services.Classes
                 SupplierId = request.SupplierId
             };
 
-            _inventoryItemRepository.Add(entity);
-            _inventoryItemRepository.Save();
+            await _inventoryItemRepository.AddAsync(entity);
+            await _inventoryItemRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, InventoryItemRequest request)
+        public async Task<bool> UpdateAsync(int id, InventoryItemRequest request)
         {
-            var item = _inventoryItemRepository.GetById(id);
+            var item = await _inventoryItemRepository.GetByIdAsync(id);
             if (item == null)
                 return false;
 
@@ -59,26 +56,27 @@ namespace RestaurantOps.BLL.Services.Classes
             item.Stock = request.Stock;
             item.SupplierId = request.SupplierId;
 
-            _inventoryItemRepository.Update(item);
-            _inventoryItemRepository.Save();
+            await _inventoryItemRepository.UpdateAsync(item);
+            await _inventoryItemRepository.SaveAsync();
 
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _inventoryItemRepository.GetById(id);
+            var item = await _inventoryItemRepository.GetByIdAsync(id);
             if (item == null)
                 return false;
 
-            _inventoryItemRepository.Delete(item);
-            _inventoryItemRepository.Save();
+            await _inventoryItemRepository.DeleteAsync(item);
+            await _inventoryItemRepository.SaveAsync();
+
             return true;
         }
 
-        public List<InventoryItemResponse> GetLowStock(decimal threshold)
+        public async Task<List<InventoryItemResponse>> GetLowStockAsync(decimal threshold)
         {
-            var items = _inventoryItemRepository.GetLowStockItems(threshold);
+            var items = await _inventoryItemRepository.GetLowStockItemsAsync(threshold);
             return items.Adapt<List<InventoryItemResponse>>();
         }
     }

@@ -16,51 +16,54 @@ namespace RestaurantOps.BLL.Services.Classes
             _menuItemIngredientRepository = menuItemIngredientRepository;
         }
 
-        public List<MenuItemIngredientResponse> GetAll()
+        public async Task<List<MenuItemIngredientResponse>> GetAllAsync()
         {
-            var list = _menuItemIngredientRepository.GetAll();
+            var list = await _menuItemIngredientRepository.GetAllAsync();
             return list.Adapt<List<MenuItemIngredientResponse>>();
         }
 
-        public MenuItemIngredientResponse GetById(int id)
+        public async Task<MenuItemIngredientResponse?> GetByIdAsync(int id)
         {
-            var entity = _menuItemIngredientRepository.GetById(id);
+            var entity = await _menuItemIngredientRepository.GetByIdAsync(id);
             return entity?.Adapt<MenuItemIngredientResponse>();
         }
 
-        public bool Create(MenuItemIngredientRequest request)
+        public async Task<bool> CreateAsync(MenuItemIngredientRequest request)
         {
             if (request == null)
                 return false;
 
             var entity = request.Adapt<MenuItemIngredient>();
 
-            _menuItemIngredientRepository.Add(entity);
-            _menuItemIngredientRepository.Save();
+            await _menuItemIngredientRepository.AddAsync(entity);
+            await _menuItemIngredientRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, MenuItemIngredientRequest request)
+        public async Task<bool> UpdateAsync(int id, MenuItemIngredientRequest request)
         {
-            var entity = _menuItemIngredientRepository.GetById(id);
+            var entity = await _menuItemIngredientRepository.GetByIdAsync(id);
             if (entity == null)
                 return false;
 
             request.Adapt(entity);
 
-            _menuItemIngredientRepository.Update(entity);
-            _menuItemIngredientRepository.Save();
+            await _menuItemIngredientRepository.UpdateAsync(entity);
+            await _menuItemIngredientRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var entity = _menuItemIngredientRepository.GetById(id);
+            var entity = await _menuItemIngredientRepository.GetByIdAsync(id);
             if (entity == null)
                 return false;
 
-            _menuItemIngredientRepository.Delete(entity);
-            _menuItemIngredientRepository.Save();
+            await _menuItemIngredientRepository.DeleteAsync(entity);
+            await _menuItemIngredientRepository.SaveAsync();
+
             return true;
         }
     }

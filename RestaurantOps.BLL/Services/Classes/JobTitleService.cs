@@ -16,50 +16,54 @@ namespace RestaurantOps.BLL.Services.Classes
             _jobTitleRepository = jobTitleRepository;
         }
 
-        public List<JobTitleResponse> GetAll()
+        public async Task<List<JobTitleResponse>> GetAllAsync()
         {
-            var list = _jobTitleRepository.GetAll();
+            var list = await _jobTitleRepository.GetAllAsync();
             return list.Adapt<List<JobTitleResponse>>();
         }
 
-        public JobTitleResponse GetById(int id)
+        public async Task<JobTitleResponse?> GetByIdAsync(int id)
         {
-            var job = _jobTitleRepository.GetById(id);
-            if (job == null) return null;
-
+            var job = await _jobTitleRepository.GetByIdAsync(id);
             return job?.Adapt<JobTitleResponse>();
         }
 
-        public bool Create(JobTitleRequest request)
+        public async Task<bool> CreateAsync(JobTitleRequest request)
         {
-            if (request == null) return false;
+            if (request == null)
+                return false;
 
             var entity = request.Adapt<JobTitle>();
 
-            _jobTitleRepository.Add(entity);
-            _jobTitleRepository.Save();
+            await _jobTitleRepository.AddAsync(entity);
+            await _jobTitleRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, JobTitleRequest request)
+        public async Task<bool> UpdateAsync(int id, JobTitleRequest request)
         {
-            var entity = _jobTitleRepository.GetById(id);
-            if (entity == null) return false;
+            var entity = await _jobTitleRepository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
 
             request.Adapt(entity);
 
-            _jobTitleRepository.Update(entity);
-            _jobTitleRepository.Save();
+            await _jobTitleRepository.UpdateAsync(entity);
+            await _jobTitleRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var entity = _jobTitleRepository.GetById(id);
-            if (entity == null) return false;
+            var entity = await _jobTitleRepository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
 
-            _jobTitleRepository.Delete(entity);
-            _jobTitleRepository.Save();
+            await _jobTitleRepository.DeleteAsync(entity);
+            await _jobTitleRepository.SaveAsync();
+
             return true;
         }
     }

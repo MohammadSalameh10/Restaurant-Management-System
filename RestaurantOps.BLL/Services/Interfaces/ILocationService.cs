@@ -5,10 +5,10 @@ namespace RestaurantOps.BLL.Services.Interfaces
 {
     public interface ILocationService
     {
-        List<LocationResponse> GetAll();
-        LocationResponse GetById(int id);
-        int Create(LocationRequest request);
-        bool Update(int id, LocationRequest request);
-        bool Delete(int id);
+        Task<List<LocationResponse>> GetAllAsync();
+        Task<LocationResponse?> GetByIdAsync(int id);
+        Task<int> CreateAsync(LocationRequest request);
+        Task<bool> UpdateAsync(int id, LocationRequest request);
+        Task<bool> DeleteAsync(int id);
     }
 }

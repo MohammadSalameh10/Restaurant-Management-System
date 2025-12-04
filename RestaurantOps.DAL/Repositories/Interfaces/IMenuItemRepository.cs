@@ -4,12 +4,12 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface IMenuItemRepository
     {
-        List<MenuItem> GetAll();
-        public List<MenuItem> GetByIdsWithIngredients(List<int> id);
-        MenuItem GetById(int id);
-        void Add(MenuItem menuItem);
-        void Update(MenuItem menuItem);
-        void Delete(MenuItem menuItem);
-        void Save();
+        Task<List<MenuItem>> GetAllAsync();
+        Task<List<MenuItem>> GetByIdsWithIngredientsAsync(List<int> ids);
+        Task<MenuItem?> GetByIdAsync(int id);
+        Task AddAsync(MenuItem menuItem);
+        Task UpdateAsync(MenuItem menuItem);
+        Task DeleteAsync(MenuItem menuItem);
+        Task SaveAsync();
     }
 }

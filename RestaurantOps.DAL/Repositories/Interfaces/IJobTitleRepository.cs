@@ -4,11 +4,11 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface IJobTitleRepository
     {
-        List<JobTitle> GetAll();
-        JobTitle GetById(int id);
-        void Add(JobTitle jobTitle);
-        void Update(JobTitle jobTitle);
-        void Delete(JobTitle jobTitle);
-        void Save();
+        Task<List<JobTitle>> GetAllAsync();
+        Task<JobTitle?> GetByIdAsync(int id);
+        Task AddAsync(JobTitle jobTitle);
+        Task UpdateAsync(JobTitle jobTitle);
+        Task DeleteAsync(JobTitle jobTitle);
+        Task SaveAsync();
     }
 }

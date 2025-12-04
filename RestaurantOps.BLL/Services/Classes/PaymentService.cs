@@ -22,7 +22,10 @@ namespace RestaurantOps.BLL.Services.Classes
             _orderRepository = orderRepository;
         }
 
-        public async Task<OrderPaymentResponse> ProcessOrderPaymentAsync(OrderPaymentRequest request, string userId, HttpRequest httpRequest)
+        public async Task<OrderPaymentResponse> ProcessOrderPaymentAsync(
+            OrderPaymentRequest request,
+            string userId,
+            HttpRequest httpRequest)
         {
             if (request == null)
                 return new OrderPaymentResponse
@@ -31,7 +34,7 @@ namespace RestaurantOps.BLL.Services.Classes
                     Message = "Invalid request."
                 };
 
-            var order = _orderRepository.GetOrderWithDetails(request.OrderId);
+            var order = await _orderRepository.GetOrderWithDetailsAsync(request.OrderId);
             if (order == null)
                 return new OrderPaymentResponse
                 {
@@ -39,7 +42,7 @@ namespace RestaurantOps.BLL.Services.Classes
                     Message = "Order not found."
                 };
 
-            if (order.CustomerId.ToString() != userId)
+            if (order.Customer == null || order.Customer.UserId != userId)
                 return new OrderPaymentResponse
                 {
                     Success = false,
@@ -53,8 +56,17 @@ namespace RestaurantOps.BLL.Services.Classes
                     Message = "Order has no items."
                 };
 
-            decimal totalAmount = 0;
+            var existingPayment = await _paymentRepository.GetByOrderIdAsync(order.Id);
+            if (existingPayment != null)
+            {
+                return new OrderPaymentResponse
+                {
+                    Success = false,
+                    Message = "This order is already paid."
+                };
+            }
 
+            decimal totalAmount = 0;
             foreach (var item in order.OrderItems)
             {
                 totalAmount += item.Quantity * item.Price;
@@ -80,22 +92,23 @@ namespace RestaurantOps.BLL.Services.Classes
                     ProviderPaymentId = null,
                     PaidAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow,
-                    status = Status.Active
+                    Status = Status.Active
                 };
 
-                _paymentRepository.Add(cashPayment);
-                _paymentRepository.Save();
+                await _paymentRepository.AddAsync(cashPayment);
+                await _paymentRepository.SaveAsync();
 
                 order.OrderStatusEnum = OrderStatus.Completed;
-                _orderRepository.Update(order);
-                _orderRepository.Save();
+                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.SaveAsync();
 
                 return new OrderPaymentResponse
                 {
                     Success = true,
                     Message = "Cash payment completed successfully.",
                     Url = null,
-                    PaymentId = null
+                    PaymentId = null,
+                    Amount = totalAmount
                 };
             }
 
@@ -128,21 +141,22 @@ namespace RestaurantOps.BLL.Services.Classes
             var session = await service.CreateAsync(options);
 
             order.OrderStatusEnum = OrderStatus.Preparing;
-            _orderRepository.Update(order);
-            _orderRepository.Save();
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveAsync();
 
             return new OrderPaymentResponse
             {
                 Success = true,
                 Message = "Payment processed successfully.",
                 Url = session.Url,
-                PaymentId = session.Id
+                PaymentId = session.Id,
+                Amount = totalAmount
             };
         }
 
         public async Task<bool> HandleVisaPaymentSuccessAsync(int orderId)
         {
-            var order = _orderRepository.GetOrderWithDetails(orderId);
+            var order = await _orderRepository.GetOrderWithDetailsAsync(orderId);
             if (order == null)
                 return false;
 
@@ -150,7 +164,6 @@ namespace RestaurantOps.BLL.Services.Classes
                 return false;
 
             decimal totalAmount = 0;
-
             foreach (var item in order.OrderItems)
             {
                 totalAmount += item.Quantity * item.Price;
@@ -159,7 +172,7 @@ namespace RestaurantOps.BLL.Services.Classes
             if (totalAmount <= 0)
                 return false;
 
-            var existingPayment = _paymentRepository.GetByOrderId(order.Id);
+            var existingPayment = await _paymentRepository.GetByOrderIdAsync(order.Id);
             if (existingPayment != null)
                 return true;
 
@@ -171,15 +184,15 @@ namespace RestaurantOps.BLL.Services.Classes
                 Provider = "Stripe",
                 PaidAt = DateTime.UtcNow,
                 CreatedAt = DateTime.UtcNow,
-                status = Status.Active
+                Status = Status.Active
             };
 
-            _paymentRepository.Add(payment);
-            _paymentRepository.Save();
+            await _paymentRepository.AddAsync(payment);
+            await _paymentRepository.SaveAsync();
 
             order.OrderStatusEnum = OrderStatus.Completed;
-            _orderRepository.Update(order);
-            _orderRepository.Save();
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveAsync();
 
             return true;
         }

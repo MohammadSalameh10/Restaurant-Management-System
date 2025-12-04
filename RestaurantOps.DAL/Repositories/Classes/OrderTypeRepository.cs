@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
@@ -13,36 +14,38 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<OrderType> GetAll()
+        public async Task<List<OrderType>> GetAllAsync()
         {
-            return _context.OrderTypes.ToList();
+            return await _context.OrderTypes.ToListAsync();
         }
 
-        public OrderType GetById(int id)
+        public async Task<OrderType?> GetByIdAsync(int id)
         {
-            return _context.OrderTypes.FirstOrDefault(t => t.Id == id);
+            return await _context.OrderTypes.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public void Add(OrderType type)
+        public async Task AddAsync(OrderType type)
         {
             type.CreatedAt = DateTime.UtcNow;
-            type.status = Status.Active;
-            _context.OrderTypes.Add(type);
+            type.Status = Status.Active;
+            await _context.OrderTypes.AddAsync(type);
         }
 
-        public void Update(OrderType type)
+        public Task UpdateAsync(OrderType type)
         {
             _context.OrderTypes.Update(type);
+            return Task.CompletedTask;
         }
 
-        public void Delete(OrderType type)
+        public Task DeleteAsync(OrderType type)
         {
             _context.OrderTypes.Remove(type);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

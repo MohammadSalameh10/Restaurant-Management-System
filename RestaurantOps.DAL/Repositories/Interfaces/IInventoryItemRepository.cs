@@ -4,12 +4,12 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface IInventoryItemRepository
     {
-        List<InventoryItem> GetAll();
-        InventoryItem GetById(int id);
-        void Add(InventoryItem item);
-        void Update(InventoryItem item);
-        void Delete(InventoryItem item);
-        void Save();
-        List<InventoryItem> GetLowStockItems(decimal threshold);
+        Task<List<InventoryItem>> GetAllAsync();
+        Task<InventoryItem?> GetByIdAsync(int id);
+        Task AddAsync(InventoryItem item);
+        Task UpdateAsync(InventoryItem item);
+        Task DeleteAsync(InventoryItem item);
+        Task SaveAsync();
+        Task<List<InventoryItem>> GetLowStockItemsAsync(decimal threshold);
     }
 }

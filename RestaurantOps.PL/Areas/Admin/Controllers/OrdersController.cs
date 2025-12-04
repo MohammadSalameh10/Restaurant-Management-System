@@ -21,17 +21,20 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<OrderResponse>> GetAll()
+        public async Task<ActionResult<List<OrderResponse>>> GetAll()
         {
-            var orders = _orderService.GetAll();
+            var orders = await _orderService.GetAllAsync();
             return Ok(orders);
         }
 
         [HttpGet("filter")]
-        public ActionResult<List<OrderResponse>> Filter([FromQuery] int? status, [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] string? customerName)
+        public async Task<ActionResult<List<OrderResponse>>> Filter(
+            [FromQuery] int? status,
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate,
+            [FromQuery] string? customerName)
         {
-            var orders = _orderService.GetAll();
-
+            var orders = await _orderService.GetAllAsync();
             var query = orders.AsQueryable();
 
             if (status.HasValue && Enum.IsDefined(typeof(OrderStatus), status.Value))
@@ -55,8 +58,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
             if (!string.IsNullOrWhiteSpace(customerName))
             {
                 var name = customerName.Trim().ToLower();
-                query = query.Where(o => !string.IsNullOrEmpty(o.Customer) &&
-                                         o.Customer.ToLower().Contains(name));
+                query = query.Where(o =>
+                    !string.IsNullOrEmpty(o.Customer) &&
+                    o.Customer.ToLower().Contains(name));
             }
 
             var filtered = query.ToList();
@@ -64,13 +68,14 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet("paged")]
-        public ActionResult<PagedResult<OrderResponse>> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<OrderResponse>>> GetPaged(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
             if (pageNumber <= 0) pageNumber = 1;
             if (pageSize <= 0) pageSize = 10;
 
-            var orders = _orderService.GetAll();
-
+            var orders = await _orderService.GetAllAsync();
             var totalCount = orders.Count;
 
             var items = orders
@@ -91,31 +96,17 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<OrderResponse> GetById(int id)
+        public async Task<ActionResult<OrderResponse>> GetById(int id)
         {
-            var order = _orderService.GetById(id);
+            var order = await _orderService.GetByIdAsync(id);
             if (order == null)
                 return NotFound();
 
             return Ok(order);
         }
 
-        [HttpPost]
-        public ActionResult CreateOrder([FromBody] OrderCreateRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var orderId = _orderService.CreateOrder(request);
-
-            if (orderId == 0)
-                return BadRequest("Insufficient inventory for one or more items.");
-
-            return Ok(new { OrderId = orderId });
-        }
-
         [HttpPatch("{id}/status")]
-        public ActionResult ChangeStatus(int id, [FromBody] ChangeOrderStatusRequest request)
+        public async Task<ActionResult> ChangeStatus(int id, [FromBody] ChangeOrderStatusRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -125,7 +116,7 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
 
             var newStatus = (OrderStatus)request.OrderStatusId;
 
-            var success = _orderService.ChangeStatus(id, newStatus);
+            var success = await _orderService.ChangeStatusAsync(id, newStatus);
             if (!success)
                 return NotFound();
 
@@ -133,9 +124,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _orderService.Delete(id);
+            var success = await _orderService.DeleteAsync(id);
             if (!success)
                 return NotFound();
 

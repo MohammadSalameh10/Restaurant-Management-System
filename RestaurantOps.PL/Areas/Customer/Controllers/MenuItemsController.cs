@@ -18,19 +18,17 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
             _menuItemService = menuItemService;
         }
 
-
         [HttpGet]
-        public ActionResult<List<MenuItemResponse>> GetAll()
+        public async Task<ActionResult<List<MenuItemResponse>>> GetAll()
         {
-            var items = _menuItemService.GetAll();
+            var items = await _menuItemService.GetAllAsync();
             return Ok(items);
         }
 
-
         [HttpGet("{id}")]
-        public ActionResult<MenuItemResponse> GetById(int id)
+        public async Task<ActionResult<MenuItemResponse>> GetById(int id)
         {
-            var item = _menuItemService.GetById(id);
+            var item = await _menuItemService.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
 

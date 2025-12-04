@@ -5,6 +5,7 @@
         public string ItemName { get; set; }
         public string? Description { get; set; }
         public bool IsAvailable { get; set; } = true;
+        public decimal Price { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public List<MenuItemIngredient> Ingredients { get; set; } = new List<MenuItemIngredient>();
     }

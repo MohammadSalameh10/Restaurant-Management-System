@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantOps.BLL.Services.Interfaces;
 using RestaurantOps.DAL.DTO.Requests;
 using RestaurantOps.DAL.DTO.Responses;
+using RestaurantOps.DAL.Models;
 
 namespace RestaurantOps.PL.Areas.Customer.Controllers
 {
@@ -14,10 +15,12 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+        private readonly IOrderService _orderService;
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService, IOrderService orderService)
         {
             _paymentService = paymentService;
+            _orderService = orderService;
         }
 
         [HttpPost("process")]
@@ -46,12 +49,23 @@ namespace RestaurantOps.PL.Areas.Customer.Controllers
             return Ok(new { Message = "Payment successful." });
         }
 
-
         [HttpGet("cancel/{orderId}")]
         [AllowAnonymous]
-        public ActionResult Cancel(int orderId)
+        public async Task<ActionResult> Cancel(int orderId)
         {
-            return Ok(new { Message = "Payment canceled." });
+            var order = await _orderService.GetByIdAsync(orderId);
+            if (order == null)
+                return NotFound(new { Message = "Order not found." });
+
+            if (order.Status == OrderStatus.Completed.ToString())
+                return BadRequest(new { Message = "Order already completed. Cannot cancel payment." });
+
+            var result = await _orderService.ChangeStatusAsync(orderId, OrderStatus.Canceled);
+
+            if (!result)
+                return BadRequest(new { Message = "Failed to cancel order." });
+
+            return Ok(new { Message = "Payment canceled and order updated." });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
@@ -13,36 +14,38 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Location> GetAll()
+        public async Task<List<Location>> GetAllAsync()
         {
-            return _context.Locations.ToList();
+            return await _context.Locations.ToListAsync();
         }
 
-        public Location GetById(int id)
+        public async Task<Location?> GetByIdAsync(int id)
         {
-            return _context.Locations.FirstOrDefault(l => l.Id == id);
+            return await _context.Locations.FirstOrDefaultAsync(l => l.Id == id);
         }
 
-        public void Add(Location location)
+        public async Task AddAsync(Location location)
         {
             location.CreatedAt = DateTime.UtcNow;
-            location.status = Status.Active;
-            _context.Locations.Add(location);
+            location.Status = Status.Active;
+            await _context.Locations.AddAsync(location);
         }
 
-        public void Update(Location location)
+        public Task UpdateAsync(Location location)
         {
             _context.Locations.Update(location);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Location location)
+        public Task DeleteAsync(Location location)
         {
             _context.Locations.Remove(location);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

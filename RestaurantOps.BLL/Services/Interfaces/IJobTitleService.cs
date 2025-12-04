@@ -5,10 +5,10 @@ namespace RestaurantOps.BLL.Services.Interfaces
 {
     public interface IJobTitleService
     {
-        List<JobTitleResponse> GetAll();
-        JobTitleResponse GetById(int id);
-        bool Create(JobTitleRequest request);
-        bool Update(int id, JobTitleRequest request);
-        bool Delete(int id);
+        Task<List<JobTitleResponse>> GetAllAsync();
+        Task<JobTitleResponse?> GetByIdAsync(int id);
+        Task<bool> CreateAsync(JobTitleRequest request);
+        Task<bool> UpdateAsync(int id, JobTitleRequest request);
+        Task<bool> DeleteAsync(int id);
     }
 }

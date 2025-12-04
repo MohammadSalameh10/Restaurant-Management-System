@@ -10,21 +10,21 @@ namespace RestaurantOps.PL.Areas.Identity.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+
         public AccountsController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
 
         [HttpPost("Register")]
-
-        public async Task<ActionResult<UserResponse>> Register(RegisterRequest registerRequest)
+        public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest registerRequest)
         {
             var result = await _authenticationService.RegisterAsync(registerRequest, Request);
             return Ok(result);
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserResponse>> Login(LoginRequest loginRequest)
+        public async Task<ActionResult<UserResponse>> Login([FromBody] LoginRequest loginRequest)
         {
             var result = await _authenticationService.LoginAsync(loginRequest);
             return Ok(result);

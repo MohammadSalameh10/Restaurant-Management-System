@@ -1,4 +1,5 @@
-﻿using RestaurantOps.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOps.DAL.Data;
 using RestaurantOps.DAL.Models;
 using RestaurantOps.DAL.Repositories.Interfaces;
 
@@ -13,36 +14,39 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<JobTitle> GetAll()
+        public async Task<List<JobTitle>> GetAllAsync()
         {
-            return _context.JobTitles.ToList();
+            return await _context.JobTitles.ToListAsync();
         }
 
-        public JobTitle GetById(int id)
+        public async Task<JobTitle?> GetByIdAsync(int id)
         {
-            return _context.JobTitles.FirstOrDefault(j => j.Id == id);
+            return await _context.JobTitles
+                .FirstOrDefaultAsync(j => j.Id == id);
         }
 
-        public void Add(JobTitle jobTitle)
+        public async Task AddAsync(JobTitle jobTitle)
         {
             jobTitle.CreatedAt = DateTime.UtcNow;
-            jobTitle.status = Status.Active;
-            _context.JobTitles.Add(jobTitle);
+            jobTitle.Status = Status.Active;
+            await _context.JobTitles.AddAsync(jobTitle);
         }
 
-        public void Update(JobTitle jobTitle)
+        public Task UpdateAsync(JobTitle jobTitle)
         {
             _context.JobTitles.Update(jobTitle);
+            return Task.CompletedTask;
         }
 
-        public void Delete(JobTitle jobTitle)
+        public Task DeleteAsync(JobTitle jobTitle)
         {
             _context.JobTitles.Remove(jobTitle);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

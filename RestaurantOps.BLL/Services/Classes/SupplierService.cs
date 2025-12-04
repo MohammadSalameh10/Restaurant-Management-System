@@ -18,63 +18,63 @@ namespace RestaurantOps.BLL.Services.Classes
             _locationRepository = locationRepository;
         }
 
-        public List<SupplierResponse> GetAll()
+        public async Task<List<SupplierResponse>> GetAllAsync()
         {
-            var suppliers = _supplierRepository.GetAll();
+            var suppliers = await _supplierRepository.GetAllAsync();
             return suppliers.Adapt<List<SupplierResponse>>();
         }
 
-        public SupplierResponse GetById(int id)
+        public async Task<SupplierResponse?> GetByIdAsync(int id)
         {
-            var supplier = _supplierRepository.GetById(id);
+            var supplier = await _supplierRepository.GetByIdAsync(id);
             return supplier?.Adapt<SupplierResponse>();
         }
 
-        public int Create(SupplierRequest request)
+        public async Task<int> CreateAsync(SupplierRequest request)
         {
             if (request == null)
                 return 0;
 
-            var location = _locationRepository.GetById(request.LocationId);
+            var location = await _locationRepository.GetByIdAsync(request.LocationId);
             if (location == null)
                 return 0;
 
             var entity = request.Adapt<Supplier>();
             entity.CreatedAt = DateTime.UtcNow;
-            entity.status = Status.Active;
+            entity.Status = Status.Active;
 
-            _supplierRepository.Add(entity);
-            _supplierRepository.Save();
+            await _supplierRepository.AddAsync(entity);
+            await _supplierRepository.SaveAsync();
 
             return entity.Id;
         }
 
-        public bool Update(int id, SupplierRequest request)
+        public async Task<bool> UpdateAsync(int id, SupplierRequest request)
         {
-            var supplier = _supplierRepository.GetById(id);
+            var supplier = await _supplierRepository.GetByIdAsync(id);
             if (supplier == null)
                 return false;
 
-            var location = _locationRepository.GetById(request.LocationId);
+            var location = await _locationRepository.GetByIdAsync(request.LocationId);
             if (location == null)
                 return false;
 
             request.Adapt(supplier);
 
-            _supplierRepository.Update(supplier);
-            _supplierRepository.Save();
+            await _supplierRepository.UpdateAsync(supplier);
+            await _supplierRepository.SaveAsync();
 
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var supplier = _supplierRepository.GetById(id);
+            var supplier = await _supplierRepository.GetByIdAsync(id);
             if (supplier == null)
                 return false;
 
-            _supplierRepository.Delete(supplier);
-            _supplierRepository.Save();
+            await _supplierRepository.DeleteAsync(supplier);
+            await _supplierRepository.SaveAsync();
 
             return true;
         }

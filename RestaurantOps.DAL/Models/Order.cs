@@ -14,7 +14,7 @@
         public DateTime Date { get; set; }
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public OrderStatus OrderStatusEnum { get; set; }
         public int OrderTypeId { get; set; }

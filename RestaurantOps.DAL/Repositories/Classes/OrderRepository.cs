@@ -14,64 +14,66 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAllAsync()
         {
-            return _context.Orders.ToList();
+            return await _context.Orders.ToListAsync();
         }
 
-        public Order GetById(int id)
+        public async Task<Order?> GetByIdAsync(int id)
         {
-            return _context.Orders
+            return await _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Employee)
                 .Include(o => o.OrderType)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.MenuItem)
-                .FirstOrDefault(o => o.Id == id);
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public void Add(Order order)
+        public async Task AddAsync(Order order)
         {
             order.CreatedAt = DateTime.UtcNow;
-            order.status = Status.Active;
-            _context.Orders.Add(order);
+            order.Status = Status.Active;
+            await _context.Orders.AddAsync(order);
         }
 
-        public void Update(Order order)
+        public Task UpdateAsync(Order order)
         {
             _context.Orders.Update(order);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Order order)
+        public Task DeleteAsync(Order order)
         {
             _context.Orders.Remove(order);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Order GetOrderWithDetails(int id)
+        public async Task<Order?> GetOrderWithDetailsAsync(int id)
         {
-            return _context.Orders
-                .Include(o => o.Customer)
-                .Include(o => o.Employee)
-                .Include(o => o.OrderType)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.MenuItem)
-                .FirstOrDefault(o => o.Id == id);
+            return await _context.Orders
+          .Include(o => o.Customer)
+          .Include(o => o.Employee)
+          .Include(o => o.OrderType)
+          .Include(o => o.OrderItems)
+              .ThenInclude(oi => oi.MenuItem)
+          .FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public List<Order> GetAllWithDetails()
+        public async Task<List<Order>> GetAllWithDetailsAsync()
         {
-            return _context.Orders
-                .Include(o => o.Customer)
-                .Include(o => o.Employee)
-                .Include(o => o.OrderType)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.MenuItem)
-                .ToList();
+            return await _context.Orders
+         .Include(o => o.Customer)
+         .Include(o => o.Employee)
+         .Include(o => o.OrderType)
+         .Include(o => o.OrderItems)
+             .ThenInclude(oi => oi.MenuItem)
+         .ToListAsync();
         }
     }
 }

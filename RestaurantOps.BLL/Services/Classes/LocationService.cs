@@ -16,22 +16,19 @@ namespace RestaurantOps.BLL.Services.Classes
             _locationRepository = locationRepository;
         }
 
-        public List<LocationResponse> GetAll()
+        public async Task<List<LocationResponse>> GetAllAsync()
         {
-            var list = _locationRepository.GetAll();
+            var list = await _locationRepository.GetAllAsync();
             return list.Adapt<List<LocationResponse>>();
         }
 
-        public LocationResponse GetById(int id)
+        public async Task<LocationResponse?> GetByIdAsync(int id)
         {
-            var location = _locationRepository.GetById(id);
-            if (location == null)
-                return null;
-
+            var location = await _locationRepository.GetByIdAsync(id);
             return location?.Adapt<LocationResponse>();
         }
 
-        public int Create(LocationRequest request)
+        public async Task<int> CreateAsync(LocationRequest request)
         {
             if (request == null)
                 return 0;
@@ -39,36 +36,37 @@ namespace RestaurantOps.BLL.Services.Classes
             var entity = request.Adapt<Location>();
 
             entity.CreatedAt = DateTime.UtcNow;
-            entity.status = Status.Active;
+            entity.Status = Status.Active;
 
-            _locationRepository.Add(entity);
-            _locationRepository.Save();
+            await _locationRepository.AddAsync(entity);
+            await _locationRepository.SaveAsync();
 
             return entity.Id;
         }
 
-        public bool Update(int id, LocationRequest request)
+        public async Task<bool> UpdateAsync(int id, LocationRequest request)
         {
-            var entity = _locationRepository.GetById(id);
+            var entity = await _locationRepository.GetByIdAsync(id);
             if (entity == null)
                 return false;
 
             request.Adapt(entity);
 
-            _locationRepository.Update(entity);
-            _locationRepository.Save();
+            await _locationRepository.UpdateAsync(entity);
+            await _locationRepository.SaveAsync();
 
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var entity = _locationRepository.GetById(id);
+            var entity = await _locationRepository.GetByIdAsync(id);
             if (entity == null)
                 return false;
 
-            _locationRepository.Delete(entity);
-            _locationRepository.Save();
+            await _locationRepository.DeleteAsync(entity);
+            await _locationRepository.SaveAsync();
+
             return true;
         }
     }

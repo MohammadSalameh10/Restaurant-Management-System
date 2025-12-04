@@ -20,47 +20,47 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<JobTitleResponse>> GetAll()
+        public async Task<ActionResult<List<JobTitleResponse>>> GetAll()
         {
-            var list = _jobTitleService.GetAll();
+            var list = await _jobTitleService.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<JobTitleResponse> GetById(int id)
+        public async Task<ActionResult<JobTitleResponse>> GetById(int id)
         {
-            var item = _jobTitleService.GetById(id);
+            var item = await _jobTitleService.GetByIdAsync(id);
             if (item == null) return NotFound();
 
             return Ok(item);
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] JobTitleRequest request)
+        public async Task<ActionResult> Create([FromBody] JobTitleRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _jobTitleService.Create(request);
+            var ok = await _jobTitleService.CreateAsync(request);
             if (!ok) return BadRequest("Unable to create job title.");
 
             return Ok("Job title created.");
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] JobTitleRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] JobTitleRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ok = _jobTitleService.Update(id, request);
+            var ok = await _jobTitleService.UpdateAsync(id, request);
             if (!ok) return NotFound();
 
             return Ok("Job title updated.");
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var ok = _jobTitleService.Delete(id);
+            var ok = await _jobTitleService.DeleteAsync(id);
             if (!ok) return NotFound();
 
             return Ok("Job title deleted.");

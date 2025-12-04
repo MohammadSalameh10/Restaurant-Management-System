@@ -4,11 +4,11 @@ namespace RestaurantOps.DAL.Repositories.Interfaces
 {
     public interface ILocationRepository
     {
-        List<Location> GetAll();
-        Location GetById(int id);
-        void Add(Location location);
-        void Update(Location location);
-        void Delete(Location location);
-        void Save();
+        Task<List<Location>> GetAllAsync();
+        Task<Location?> GetByIdAsync(int id);
+        Task AddAsync(Location location);
+        Task UpdateAsync(Location location);
+        Task DeleteAsync(Location location);
+        Task SaveAsync();
     }
 }

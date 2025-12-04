@@ -14,40 +14,42 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Supplier> GetAll()
+        public async Task<List<Supplier>> GetAllAsync()
         {
-            return _context.Suppliers
+            return await _context.Suppliers
                 .Include(s => s.Location)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Supplier GetById(int id)
+        public async Task<Supplier?> GetByIdAsync(int id)
         {
-            return _context.Suppliers
+            return await _context.Suppliers
                 .Include(s => s.Location)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public void Add(Supplier supplier)
+        public async Task AddAsync(Supplier supplier)
         {
             supplier.CreatedAt = DateTime.UtcNow;
-            supplier.status = Status.Active;
-            _context.Suppliers.Add(supplier);
+            supplier.Status = Status.Active;
+            await _context.Suppliers.AddAsync(supplier);
         }
 
-        public void Update(Supplier supplier)
+        public Task UpdateAsync(Supplier supplier)
         {
             _context.Suppliers.Update(supplier);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Supplier supplier)
+        public Task DeleteAsync(Supplier supplier)
         {
             _context.Suppliers.Remove(supplier);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

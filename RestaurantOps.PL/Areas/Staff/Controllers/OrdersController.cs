@@ -25,41 +25,42 @@ namespace RestaurantOps.PL.Areas.Staff.Controllers
         }
 
         [HttpGet("today")]
-        public ActionResult<List<OrderResponse>> GetTodayOrders()
+        public async Task<ActionResult<List<OrderResponse>>> GetTodayOrders()
         {
             var today = DateTime.UtcNow.Date;
 
-            var orders = _orderService.GetAll()
+            var orders = await _orderService.GetAllAsync();
+            var todayOrders = orders
                 .Where(o => o.Date.Date == today)
                 .ToList();
 
-            return Ok(orders);
+            return Ok(todayOrders);
         }
 
         [HttpGet]
-        public ActionResult<List<OrderResponse>> GetAll()
+        public async Task<ActionResult<List<OrderResponse>>> GetAll()
         {
-            var orders = _orderService.GetAll();
+            var orders = await _orderService.GetAllAsync();
             return Ok(orders);
         }
 
         [HttpGet("my")]
-        public ActionResult<List<OrderResponse>> GetMyOrders()
+        public async Task<ActionResult<List<OrderResponse>>> GetMyOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var employee = _employeeRepository.GetByUserId(userId);
+            var employee = await _employeeRepository.GetByUserIdAsync(userId);
             if (employee == null)
                 return BadRequest("Employee profile not found for this user.");
 
-            var orders = _orderService.GetOrdersForEmployee(employee.Id);
+            var orders = await _orderService.GetOrdersForEmployeeAsync(employee.Id);
             return Ok(orders);
         }
 
         [HttpPatch("{id}/status")]
-        public ActionResult ChangeStatus(int id, [FromBody] ChangeOrderStatusRequest request)
+        public async Task<ActionResult> ChangeStatus(int id, [FromBody] ChangeOrderStatusRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -69,11 +70,33 @@ namespace RestaurantOps.PL.Areas.Staff.Controllers
 
             var newStatus = (OrderStatus)request.OrderStatusId;
 
-            var success = _orderService.ChangeStatus(id, newStatus);
+            var success = await _orderService.ChangeStatusAsync(id, newStatus);
             if (!success)
                 return NotFound();
 
             return Ok("Order status updated.");
+        }
+
+        [HttpPatch("{id}/assign-to-me")]
+        public async Task<ActionResult> AssignToMe(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var employee = await _employeeRepository.GetByUserIdAsync(userId);
+            if (employee == null)
+                return BadRequest("Employee profile not found for this user.");
+
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null)
+                return NotFound("Order not found.");
+
+            var success = await _orderService.AssignOrderToEmployeeAsync(id, employee.Id);
+            if (!success)
+                return BadRequest("Unable to assign this order.");
+
+            return Ok(new { Message = "Order assigned to you successfully." });
         }
     }
 }

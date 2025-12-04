@@ -5,10 +5,10 @@ namespace RestaurantOps.BLL.Services.Interfaces
 {
     public interface IOrderTypeService
     {
-        List<OrderTypeResponse> GetAll();
-        OrderTypeResponse GetById(int id);
-        bool Create(OrderTypeRequest request);
-        bool Update(int id, OrderTypeRequest request);
-        bool Delete(int id);
+        Task<List<OrderTypeResponse>> GetAllAsync();
+        Task<OrderTypeResponse?> GetByIdAsync(int id);
+        Task<bool> CreateAsync(OrderTypeRequest request);
+        Task<bool> UpdateAsync(int id, OrderTypeRequest request);
+        Task<bool> DeleteAsync(int id);
     }
 }

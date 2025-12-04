@@ -20,16 +20,16 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<SupplierResponse>> GetAll()
+        public async Task<ActionResult<List<SupplierResponse>>> GetAll()
         {
-            var list = _supplierService.GetAll();
+            var list = await _supplierService.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<SupplierResponse> GetById(int id)
+        public async Task<ActionResult<SupplierResponse>> GetById(int id)
         {
-            var item = _supplierService.GetById(id);
+            var item = await _supplierService.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
 
@@ -37,12 +37,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] SupplierRequest request)
+        public async Task<ActionResult> Create([FromBody] SupplierRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var id = _supplierService.Create(request);
+            var id = await _supplierService.CreateAsync(request);
             if (id == 0)
                 return BadRequest("Unable to create supplier.");
 
@@ -50,12 +50,12 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] SupplierRequest request)
+        public async Task<ActionResult> Update(int id, [FromBody] SupplierRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ok = _supplierService.Update(id, request);
+            var ok = await _supplierService.UpdateAsync(id, request);
             if (!ok)
                 return NotFound();
 
@@ -63,9 +63,9 @@ namespace RestaurantOps.PL.Areas.Admin.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var ok = _supplierService.Delete(id);
+            var ok = await _supplierService.DeleteAsync(id);
             if (!ok)
                 return NotFound();
 

@@ -23,25 +23,32 @@ namespace RestaurantOps.BLL.Services.Classes
             _inventoryItemRepository = inventoryItemRepository;
         }
 
-        public List<OrderResponse> GetAll()
+        public async Task<List<OrderResponse>> GetAllAsync()
         {
-            var orders = _orderRepository.GetAllWithDetails();
+            var orders = await _orderRepository.GetAllWithDetailsAsync();
             return orders.Adapt<List<OrderResponse>>();
         }
 
-        public OrderResponse GetById(int id)
+        public async Task<OrderResponse?> GetByIdAsync(int id)
         {
-            var order = _orderRepository.GetOrderWithDetails(id);
+            var order = await _orderRepository.GetOrderWithDetailsAsync(id);
             return order?.Adapt<OrderResponse>();
         }
 
-        public int CreateOrder(OrderCreateRequest request)
+        public async Task<int> CreateOrderAsync(OrderCreateRequest request)
         {
             if (request == null || request.Items == null || !request.Items.Any())
                 return 0;
 
-            var menuItemIds = request.Items.Select(i => i.MenuItemId).Distinct().ToList();
-            var allMenuItems = _menuItemRepository.GetByIdsWithIngredients(menuItemIds);
+            var menuItemIds = request.Items
+                .Select(i => i.MenuItemId)
+                .Distinct()
+                .ToList();
+
+            var allMenuItems = await _menuItemRepository.GetByIdsWithIngredientsAsync(menuItemIds);
+
+            if (allMenuItems.Count != menuItemIds.Count)
+                return 0;
 
             var requiredInventory = new Dictionary<int, decimal>();
 
@@ -53,20 +60,16 @@ namespace RestaurantOps.BLL.Services.Classes
 
                 foreach (var ingredient in menuItem.Ingredients)
                 {
-                    var neededForThisItem = ingredient.Quantity * orderItem.Quantity;
+                    var needed = ingredient.Quantity * orderItem.Quantity;
 
                     if (requiredInventory.ContainsKey(ingredient.InventoryItemId))
-                    {
-                        requiredInventory[ingredient.InventoryItemId] += neededForThisItem;
-                    }
+                        requiredInventory[ingredient.InventoryItemId] += needed;
                     else
-                    {
-                        requiredInventory[ingredient.InventoryItemId] = neededForThisItem;
-                    }
+                        requiredInventory[ingredient.InventoryItemId] = needed;
                 }
             }
 
-            var inventoryItems = _inventoryItemRepository.GetAll()
+            var inventoryItems = (await _inventoryItemRepository.GetAllAsync())
                 .Where(i => requiredInventory.Keys.Contains(i.Id))
                 .ToList();
 
@@ -74,18 +77,33 @@ namespace RestaurantOps.BLL.Services.Classes
             {
                 var needed = requiredInventory[inventoryItem.Id];
                 if (inventoryItem.Stock < needed)
-                {
                     return 0;
-                }
             }
 
             foreach (var inventoryItem in inventoryItems)
             {
                 var needed = requiredInventory[inventoryItem.Id];
                 inventoryItem.Stock -= needed;
-                _inventoryItemRepository.Update(inventoryItem);
+                _inventoryItemRepository.UpdateAsync(inventoryItem);
             }
-            _inventoryItemRepository.Save();
+
+            await _inventoryItemRepository.SaveAsync();
+
+            var orderItems = new List<OrderItem>();
+
+            foreach (var itemRequest in request.Items)
+            {
+                var menuItem = allMenuItems.First(m => m.Id == itemRequest.MenuItemId);
+
+                orderItems.Add(new OrderItem
+                {
+                    MenuItemId = itemRequest.MenuItemId,
+                    Quantity = itemRequest.Quantity,
+                    Price = menuItem.Price,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = Status.Active
+                });
+            }
 
             var order = new Order
             {
@@ -95,60 +113,54 @@ namespace RestaurantOps.BLL.Services.Classes
                 OrderStatusEnum = OrderStatus.Pending,
                 Date = DateTime.UtcNow,
                 CreatedAt = DateTime.UtcNow,
-                status = Status.Active,
-                OrderItems = request.Items.Select(i => new OrderItem
-                {
-                    MenuItemId = i.MenuItemId,
-                    Quantity = i.Quantity,
-                    Price = i.Price,
-                    CreatedAt = DateTime.UtcNow,
-                    status = Status.Active
-                }).ToList()
+                Status = Status.Active,
+                OrderItems = orderItems,
             };
 
-            _orderRepository.Add(order);
-            _orderRepository.Save();
+            await _orderRepository.AddAsync(order);
+            await _orderRepository.SaveAsync();
 
             return order.Id;
         }
 
-        public bool ChangeStatus(int id, OrderStatus newStatus)
+        public async Task<bool> ChangeStatusAsync(int id, OrderStatus newStatus)
         {
-            var order = _orderRepository.GetById(id);
+            var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
                 return false;
 
             order.OrderStatusEnum = newStatus;
-            _orderRepository.Update(order);
-            _orderRepository.Save();
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveAsync();
 
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var order = _orderRepository.GetById(id);
+            var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
                 return false;
 
-            _orderRepository.Delete(order);
-            _orderRepository.Save();
+            await _orderRepository.DeleteAsync(order);
+            await _orderRepository.SaveAsync();
 
             return true;
         }
 
-        public List<OrderResponse> GetCustomerOrders(string userId)
+        public async Task<List<OrderResponse>> GetCustomerOrdersAsync(string userId)
         {
-            var orders = _orderRepository.GetAllWithDetails()
+            var orders = await _orderRepository.GetAllWithDetailsAsync();
+            var filtered = orders
                 .Where(o => o.Customer != null && o.Customer.UserId == userId)
                 .ToList();
 
-            return orders.Adapt<List<OrderResponse>>();
+            return filtered.Adapt<List<OrderResponse>>();
         }
 
-        public bool CancelOrderForCustomer(int orderId, string userId)
+        public async Task<bool> CancelOrderForCustomerAsync(int orderId, string userId)
         {
-            var order = _orderRepository.GetOrderWithDetails(orderId);
+            var order = await _orderRepository.GetOrderWithDetailsAsync(orderId);
             if (order == null)
                 return false;
 
@@ -159,18 +171,31 @@ namespace RestaurantOps.BLL.Services.Classes
                 return false;
 
             order.OrderStatusEnum = OrderStatus.Canceled;
-            _orderRepository.Update(order);
-            _orderRepository.Save();
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveAsync();
 
             return true;
         }
-        public List<OrderResponse> GetOrdersForEmployee(int employeeId)
-        {
-            var orders = _orderRepository.GetAllWithDetails()
-                .Where(o => o.EmployeeId == employeeId)
-                .ToList();
 
-            return orders.Adapt<List<OrderResponse>>();
+        public async Task<List<OrderResponse>> GetOrdersForEmployeeAsync(int employeeId)
+        {
+            var orders = await _orderRepository.GetAllWithDetailsAsync();
+            var list = orders.Where(o => o.EmployeeId == employeeId).ToList();
+
+            return list.Adapt<List<OrderResponse>>();
+        }
+        public async Task<bool> AssignOrderToEmployeeAsync(int orderId, int employeeId)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+                return false;
+
+            order.EmployeeId = employeeId;
+
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveAsync();
+
+            return true;
         }
     }
 }

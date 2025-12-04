@@ -18,7 +18,8 @@ namespace RestaurantOps.BLL.Services.Classes
 
         public IDocument CreateSalesReportDocument()
         {
-            var orders = _orderRepository.GetAllWithDetails().ToList();
+            // استخدام نسخة Async لكن بشكل Sync داخل هذا الميثود
+            var orders = _orderRepository.GetAllWithDetailsAsync().Result;
 
             var today = DateTime.UtcNow.Date;
             var thisMonth = new DateTime(today.Year, today.Month, 1);

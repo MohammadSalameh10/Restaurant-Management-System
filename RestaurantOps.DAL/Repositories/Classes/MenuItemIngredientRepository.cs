@@ -14,60 +14,62 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<MenuItemIngredient> GetAll()
+        public async Task<List<MenuItemIngredient>> GetAllAsync()
         {
-            return _context.MenuItemIngredients
+            return await _context.MenuItemIngredients
                 .Include(m => m.MenuItem)
                 .Include(m => m.InventoryItem)
-                .ToList();
+                .ToListAsync();
         }
 
-        public MenuItemIngredient GetById(int id)
+        public async Task<MenuItemIngredient?> GetByIdAsync(int id)
         {
-            return _context.MenuItemIngredients
+            return await _context.MenuItemIngredients
                 .Include(m => m.MenuItem)
                 .Include(m => m.InventoryItem)
-                .FirstOrDefault(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public List<MenuItemIngredient> GetByMenuItemId(int menuItemId)
+        public async Task<List<MenuItemIngredient>> GetByMenuItemIdAsync(int menuItemId)
         {
-            return _context.MenuItemIngredients
+            return await _context.MenuItemIngredients
                 .Include(m => m.MenuItem)
                 .Include(m => m.InventoryItem)
                 .Where(m => m.MenuItemId == menuItemId)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<MenuItemIngredient> GetByMenuItemIds(List<int> menuItemIds)
+        public async Task<List<MenuItemIngredient>> GetByMenuItemIdsAsync(List<int> menuItemIds)
         {
-            return _context.MenuItemIngredients
+            return await _context.MenuItemIngredients
                 .Include(m => m.MenuItem)
                 .Include(m => m.InventoryItem)
                 .Where(m => menuItemIds.Contains(m.MenuItemId))
-                .ToList();
+                .ToListAsync();
         }
 
-        public void Add(MenuItemIngredient entity)
+        public async Task AddAsync(MenuItemIngredient entity)
         {
             entity.CreatedAt = DateTime.UtcNow;
-            entity.status = Status.Active;
-            _context.MenuItemIngredients.Add(entity);
+            entity.Status = Status.Active;
+            await _context.MenuItemIngredients.AddAsync(entity);
         }
 
-        public void Update(MenuItemIngredient entity)
+        public Task UpdateAsync(MenuItemIngredient entity)
         {
             _context.MenuItemIngredients.Update(entity);
+            return Task.CompletedTask;
         }
 
-        public void Delete(MenuItemIngredient entity)
+        public Task DeleteAsync(MenuItemIngredient entity)
         {
             _context.MenuItemIngredients.Remove(entity);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -88,7 +88,7 @@ namespace RestaurantOps.BLL.Services.Classes
             {
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var escapeToken = Uri.EscapeDataString(token);
-                var emailUrl = $"{request.Scheme}://{request.Host}/api/identity/Account/ConfirmEmail?token={escapeToken}&userId={user.Id}";
+                var emailUrl = $"{request.Scheme}://{request.Host}/api/identity/Accounts/ConfirmEmail?token={escapeToken}&userId={user.Id}";
 
                 await _userManager.AddToRoleAsync(user, "Customer");
 
@@ -165,14 +165,19 @@ namespace RestaurantOps.BLL.Services.Classes
                 return false;
             }
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var restult = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
 
-            if (restult.Succeeded)
-            {
-                await _emailSender.SendEmailAsync(user.Email, "Password Reset Successful",
-                    $"<h1>Hello {user.UserName}</h1>" +
-                    $"<p>Your password has been reset successfully.</p>");
-            }
+            if (!result.Succeeded)
+                return false;
+
+            user.CodeResetPassword = null;
+            user.PasswordResetCodeExpiry = null;
+            await _userManager.UpdateAsync(user);
+
+            await _emailSender.SendEmailAsync(user.Email, "Password Reset Successful",
+                $"<h1>Hello {user.UserName}</h1>" +
+                $"<p>Your password has been reset successfully.</p>");
+
             return true;
         }
     }

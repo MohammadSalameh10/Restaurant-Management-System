@@ -11,7 +11,7 @@ namespace RestaurantOps.PL.Utils
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("hamodesalameh747@gmail.com", "krgd wngs qkgj ygiy")
+                Credentials = new NetworkCredential("hamodesalameh747@gmail.com", "uhcv qtox tunh eeyc")
             };
 
             return client.SendMailAsync(

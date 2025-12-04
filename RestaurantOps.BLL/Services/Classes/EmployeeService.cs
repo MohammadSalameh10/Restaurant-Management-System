@@ -16,23 +16,22 @@ namespace RestaurantOps.BLL.Services.Classes
             _employeeRepository = employeeRepository;
         }
 
-        public List<EmployeeResponse> GetAll()
+        public async Task<List<EmployeeResponse>> GetAllAsync()
         {
-            var employees = _employeeRepository.GetAll();
+            var employees = await _employeeRepository.GetAllAsync();
             return employees.Adapt<List<EmployeeResponse>>();
         }
 
-        public EmployeeResponse GetById(int id)
+        public async Task<EmployeeResponse?> GetByIdAsync(int id)
         {
-            var employee = _employeeRepository.GetById(id);
-            if (employee == null) return null;
-
+            var employee = await _employeeRepository.GetByIdAsync(id);
             return employee?.Adapt<EmployeeResponse>();
         }
 
-        public bool Create(EmployeeRequest request)
+        public async Task<bool> CreateAsync(EmployeeRequest request)
         {
-            if (request == null) return false;
+            if (request == null)
+                return false;
 
             var entity = new Employee
             {
@@ -41,32 +40,37 @@ namespace RestaurantOps.BLL.Services.Classes
                 JobTitleId = request.JobTitleId
             };
 
-            _employeeRepository.Add(entity);
-            _employeeRepository.Save();
+            await _employeeRepository.AddAsync(entity);
+            await _employeeRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Update(int id, EmployeeRequest request)
+        public async Task<bool> UpdateAsync(int id, EmployeeRequest request)
         {
-            var employee = _employeeRepository.GetById(id);
-            if (employee == null) return false;
+            var employee = await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+                return false;
 
             employee.Name = request.Name;
             employee.DateOfBirth = request.DateOfBirth;
             employee.JobTitleId = request.JobTitleId;
 
-            _employeeRepository.Update(employee);
-            _employeeRepository.Save();
+            await _employeeRepository.UpdateAsync(employee);
+            await _employeeRepository.SaveAsync();
+
             return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var employee = _employeeRepository.GetById(id);
-            if (employee == null) return false;
+            var employee = await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+                return false;
 
-            _employeeRepository.Delete(employee);
-            _employeeRepository.Save();
+            await _employeeRepository.DeleteAsync(employee);
+            await _employeeRepository.SaveAsync();
+
             return true;
         }
     }

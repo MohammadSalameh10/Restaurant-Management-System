@@ -14,46 +14,48 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Employee> GetAll()
+        public async Task<List<Employee>> GetAllAsync()
         {
-            return _context.Employees
+            return await _context.Employees
                 .Include(e => e.JobTitle)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Employee GetById(int id)
+        public async Task<Employee?> GetByIdAsync(int id)
         {
-            return _context.Employees
+            return await _context.Employees
                 .Include(e => e.JobTitle)
-                .FirstOrDefault(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public void Add(Employee employee)
+        public async Task AddAsync(Employee employee)
         {
             employee.CreatedAt = DateTime.UtcNow;
-            employee.status = Status.Active;
-            _context.Employees.Add(employee);
+            employee.Status = Status.Active;
+            await _context.Employees.AddAsync(employee);
         }
 
-        public void Update(Employee employee)
+        public Task UpdateAsync(Employee employee)
         {
             _context.Employees.Update(employee);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Employee employee)
+        public Task DeleteAsync(Employee employee)
         {
             _context.Employees.Remove(employee);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Employee GetByUserId(string userId)
+        public async Task<Employee?> GetByUserIdAsync(string userId)
         {
-            return _context.Employees.FirstOrDefault(e => e.UserId == userId);
+            return await _context.Employees
+                .FirstOrDefaultAsync(e => e.UserId == userId);
         }
-
     }
 }

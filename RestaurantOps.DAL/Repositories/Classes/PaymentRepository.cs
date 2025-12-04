@@ -14,50 +14,52 @@ namespace RestaurantOps.DAL.Repositories.Classes
             _context = context;
         }
 
-        public List<Payment> GetAll()
+        public async Task<List<Payment>> GetAllAsync()
         {
-            return _context.Payments
+            return await _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Payment GetById(int id)
+        public async Task<Payment?> GetByIdAsync(int id)
         {
-            return _context.Payments
+            return await _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .FirstOrDefault(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Payment GetByOrderId(int orderId)
+        public async Task<Payment?> GetByOrderIdAsync(int orderId)
         {
-            return _context.Payments
+            return await _context.Payments
                 .Include(p => p.Order)
                     .ThenInclude(o => o.Customer)
-                .FirstOrDefault(p => p.OrderId == orderId);
+                .FirstOrDefaultAsync(p => p.OrderId == orderId);
         }
 
-        public void Add(Payment payment)
+        public async Task AddAsync(Payment payment)
         {
             payment.CreatedAt = DateTime.UtcNow;
-            payment.status = Status.Active;
-            _context.Payments.Add(payment);
+            payment.Status = Status.Active;
+            await _context.Payments.AddAsync(payment);
         }
 
-        public void Update(Payment payment)
+        public Task UpdateAsync(Payment payment)
         {
             _context.Payments.Update(payment);
+            return Task.CompletedTask;
         }
 
-        public void Delete(Payment payment)
+        public Task DeleteAsync(Payment payment)
         {
             _context.Payments.Remove(payment);
+            return Task.CompletedTask;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
