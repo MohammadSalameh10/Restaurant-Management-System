@@ -11,5 +11,8 @@ namespace RestaurantOps.BLL.Services.Interfaces
         Task<string> ConfirmEmailAsync(string token, string userId);
         Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request);
         Task<bool> ResetPasswordAsync(ResetPasswordRequest request);
+        Task<bool> ChangeUserRoleAsync(string userId, ChangeUserRoleRequest model);
+        Task<List<UserListResponse>> GetAllUsersAsync();
+
     }
 }
